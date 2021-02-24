@@ -10,8 +10,8 @@
 sudo apt-get update && sudo apt-get upgrade
 sudo apt install python3-pip
 sudo apt-get install python-tk 
-sudo apt  install protobuf-compiler
-pip3 install -r requirements.txt
+sudo apt-get install protobuf-compiler python-lxml python-pil
+pip3 install -r requirements.txt (add Cython pandas tf-slim lvis)
 
 pip3 install --user --upgrade tensorflow
 pip3 install --user --upgrade tensorflow-gpu
@@ -24,10 +24,10 @@ git clone https://github.com/tensorflow/models.git
 # From within TensorFlow/models/research/
 protoc object_detection/protos/*.proto --python_out=.
 ```
-
+Dont need
 ```bash
 # From within TensorFlow/models/research/
-git clone https://github.com/cocodataset/cocoapi.git
+git clone https://github.com/cocodataset/cocoapi.git # not needed
 cd cocoapi/PythonAPI
 make
 cp -r pycocotools <PATH_TO_TF>/TensorFlow/models/research/
@@ -35,8 +35,9 @@ cp -r pycocotools <PATH_TO_TF>/TensorFlow/models/research/
 
 ### Object Detection API
 ```bash
+# From within /models/research/
 cp object_detection/packages/tf2/setup.py .
-python -m pip install .
+python3 -m pip install .
 
 # Test installation
 python object_detection/builders/model_builder_tf2_test.py
