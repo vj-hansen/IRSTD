@@ -90,6 +90,14 @@ sudo apt-get install -y --no-install-recommends libnvinfer7=7.1.3-1+cuda11.0 \
 nvcc --version
 ```
 
+### Download model
+cd to workspace/training_demo/pre-trained-models
+```
+# https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/tf2_detection_zoo.md
+# e.g. CenterNet MobileNetV2 FPN 512x512
+wget -c http://download.tensorflow.org/models/object_detection/tf2/20210210/centernet_mobilenetv2fpn_512x512_coco17_od.tar.gz -O - | tar -xz
+
+```
 
 ### Folder structure
 ```
@@ -112,7 +120,7 @@ TensorFlow/
         │  ├─ test/
         │  └─ train/
         ├─ models/
-        │   └── ssd_mobilenet_v2 (model under evaluation)
+        │   └── [some model] (model under evaluation)
         │       └── pipeline.config
         ├─ model_main_tf2.py
         ├─ exporter_main_v2.py
