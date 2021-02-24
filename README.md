@@ -10,7 +10,8 @@
 sudo apt-get update && sudo apt-get upgrade
 sudo apt install python3-pip
 sudo apt-get install python-tk 
-pip3 install -r requirements.txt
+sudo apt-get install protobuf-compiler python-lxml python-pil
+pip3 install -r requirements.txt (add Cython pandas tf-slim lvis)
 
 pip3 install --user --upgrade tensorflow
 pip3 install --user --upgrade tensorflow-gpu
@@ -23,10 +24,10 @@ git clone https://github.com/tensorflow/models.git
 # From within TensorFlow/models/research/
 protoc object_detection/protos/*.proto --python_out=.
 ```
-
+Dont need
 ```bash
 # From within TensorFlow/models/research/
-git clone https://github.com/cocodataset/cocoapi.git
+git clone https://github.com/cocodataset/cocoapi.git # not needed
 cd cocoapi/PythonAPI
 make
 cp -r pycocotools <PATH_TO_TF>/TensorFlow/models/research/
@@ -34,11 +35,12 @@ cp -r pycocotools <PATH_TO_TF>/TensorFlow/models/research/
 
 ### Object Detection API
 ```bash
+# From within /models/research/
 cp object_detection/packages/tf2/setup.py .
-python -m pip install .
+python3 -m pip install .
 
 # Test installation
-python object_detection/builders/model_builder_tf2_test.py
+python3 object_detection/builders/model_builder_tf2_test.py
 ```
 
 
@@ -88,6 +90,14 @@ sudo apt-get install -y --no-install-recommends libnvinfer7=7.1.3-1+cuda11.0 \
 nvcc --version
 ```
 
+### Download model
+cd to workspace/training_demo/pre-trained-models
+```
+# https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/tf2_detection_zoo.md
+# e.g. CenterNet MobileNetV2 FPN 512x512
+wget -c http://download.tensorflow.org/models/object_detection/tf2/20210210/centernet_mobilenetv2fpn_512x512_coco17_od.tar.gz -O - | tar -xz
+
+```
 
 ### Folder structure
 ```
@@ -110,7 +120,7 @@ TensorFlow/
         │  ├─ test/
         │  └─ train/
         ├─ models/
-        │   └── ssd_mobilenet_v2 (model under evaluation)
+        │   └── [some model] (model under evaluation)
         │       └── pipeline.config
         ├─ model_main_tf2.py
         ├─ exporter_main_v2.py
@@ -150,4 +160,8 @@ python model_main_tf2.py --model_dir=models/ssd_mobilenet_v2 --pipeline_config_p
 ```bash
 python exporter_main_v2.py --input_type image_tensor --pipeline_config_path ./models/ssd_mobilenet_v2/pipeline.config --trained_checkpoint_dir ./models/ssd_mobilenet_v2/ --output_directory ./exported-models/my_model
 # python exporter_main_v2.py --input_type image_tensor --pipeline_config_path ./models/[name_of_pre-trained-model you downloaded]/pipeline.config --trained_checkpoint_dir ./models/[name_of_pre-trained-model_you_downloaded]/ --output_directory ./exported-models/my_model
+
+
+bash export_model.sh ssd_mobilenet_v2
+
 ```
