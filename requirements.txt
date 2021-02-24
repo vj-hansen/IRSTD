@@ -1,0 +1,8 @@
+numpy
+opencv-python
+matplotlib
+pandas
+tf-slim
+Cython
+lvis
+loguru

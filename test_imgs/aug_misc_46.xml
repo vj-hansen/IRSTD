@@ -1,0 +1,26 @@
+<annotation verified="yes">
+	<folder>target_test</folder>
+	<filename>aug_misc_46.png</filename>
+	<path>/Users/datasets/images/target_test/aug_misc_46.png</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>189</width>
+		<height>298</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>Target</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>83</xmin>
+			<ymin>119</ymin>
+			<xmax>105</xmax>
+			<ymax>141</ymax>
+		</bndbox>
+	</object>
+</annotation>
