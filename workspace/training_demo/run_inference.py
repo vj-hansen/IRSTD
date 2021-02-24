@@ -12,17 +12,16 @@ import warnings
 warnings.filterwarnings('ignore')
 
 
-PATH_TO_SAVED_MODEL="exported-models/my_model/saved_model"
-print('Loading model...', end='')
+PATH_TO_SAVED_MODEL="exported-models/my_centernet_fpn/saved_model"
 # Load saved model and build the detection function
 detect_fn=tf.saved_model.load(PATH_TO_SAVED_MODEL)
-print('Done!')
+
 
 #Loading the label_map
 category_index=label_map_util.create_category_index_from_labelmap("data/label_map.pbtxt",use_display_name=True)
 
 #Loading the image
-img=['images/test/aug_misc_41.png']
+img=['test_images/aug_misc_42.png']
 
 
 def load_image_into_numpy_array(path):

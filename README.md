@@ -160,4 +160,11 @@ python model_main_tf2.py --model_dir=models/ssd_mobilenet_v2 --pipeline_config_p
 ```bash
 python exporter_main_v2.py --input_type image_tensor --pipeline_config_path ./models/ssd_mobilenet_v2/pipeline.config --trained_checkpoint_dir ./models/ssd_mobilenet_v2/ --output_directory ./exported-models/my_model
 # python exporter_main_v2.py --input_type image_tensor --pipeline_config_path ./models/[name_of_pre-trained-model you downloaded]/pipeline.config --trained_checkpoint_dir ./models/[name_of_pre-trained-model_you_downloaded]/ --output_directory ./exported-models/my_model
+<<<<<<< HEAD
+=======
+
+
+bash export_model.sh ssd_mobilenet_v2
+
+>>>>>>> f238a40db4c6f4325b6b9a731a13795468094943
 ```
