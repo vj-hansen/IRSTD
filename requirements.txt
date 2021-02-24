@@ -1,0 +1,11 @@
+ Dependencies for Python. Install with:
+# `pip install -r requirements.txt`
+
+numpy
+tensorflow
+tensorflow-gpu
+tensorboard
+opencv-python
+matplotlib
+pandas
+tensorflow-datasets
