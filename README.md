@@ -40,7 +40,7 @@ cp object_detection/packages/tf2/setup.py .
 python3 -m pip install .
 
 # Test installation
-python object_detection/builders/model_builder_tf2_test.py
+python3 object_detection/builders/model_builder_tf2_test.py
 ```
 
 
