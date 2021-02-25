@@ -80,13 +80,57 @@ nvcc --version
 ```
 
 ### Download model
-* cd to ```workspace/training_demo/pre-trained-models```
+* cd to ```workspace/training_demo/pre_trained_model```
 * Pick a model from [TensorFlow Model Zoo](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/tf2_detection_zoo.md)
 
 ```
 # e.g. CenterNet MobileNetV2 FPN 512x512
 wget -c http://download.tensorflow.org/models/object_detection/tf2/20210210/centernet_mobilenetv2fpn_512x512_coco17_od.tar.gz -O - | tar -xz
+
+
+# Need to copy pipeline.config from the downloaded model into a new dir: models/[my_model]/
+cd models/
+
+# create a folder
+mkdir my_model
+
+
+# from workspace/training_demo
+
+cp -v pre_trained_model/[downloaded_model]/pipeline.config /models/[my_model]
 ```
+
+### Configurate pipeline
+
+```
+# pipeline config
+
+num_classes: 1
+
+...
+batch_size: 32 # e.g.
+
+... 
+fine_tune_checkpoint: "pre_trained_model/[downloaded_model]/checkpoint/ckpt-0" 
+fine_tune_checkpoint_type: "detection"
+use_bfloat16: false # Set this to false if you are not training on a TPU
+
+... train
+label_map_path: "data/label_map.pbtxt"
+input_path: "data/train.record"
+
+
+... in eval_config
+num_examples: 268 # num_examples = number of items in 'test.record'-file
+max_evals: 10
+
+
+... eval_input_reader
+  label_map_path: "data/label_map.pbtxt"
+  tf_record_input_reader {
+    input_path: "data/test.record"
+```
+
 
 ### Folder structure
 ```
@@ -113,14 +157,14 @@ TensorFlow/
         │       └── pipeline.config
         ├─ model_main_tf2.py
         ├─ exporter_main_v2.py
-        ├─ pre-trained-models/
+        ├─ pre_trained_model/
         └─ run_train.sh
 ```
 
 ---
 
 
-#### To start the training from scracth
+#### To start the training from scratch
 ```bash
 # Remove ckpt files in models/[a_model] 
 rm -rf checkpoint && rm -rf ckpt-* && rm -rf train
