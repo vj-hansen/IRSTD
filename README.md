@@ -97,7 +97,7 @@ mkdir my_model
 
 # from workspace/training_demo
 
-cp -v pre_trained_model/[downloaded_model]/pipeline.config /models/[my_model]
+cp -v pre_trained_model/[downloaded_model]/pipeline.config models/[my_model]
 ```
 
 ### Configurate pipeline
