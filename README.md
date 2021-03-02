@@ -111,8 +111,8 @@ num_classes: 1
 batch_size: 32 # e.g.
 
 ... 
-fine_tune_checkpoint: "pre_trained_model/[downloaded_model]/checkpoint/ckpt-0" 
-fine_tune_checkpoint_type: "detection"
+# Comment fine_tune_checkpoint: "p" 
+# Comment fine_tune_checkpoint_type: "detection"
 use_bfloat16: false # Set this to false if you are not training on a TPU
 
 ... train
