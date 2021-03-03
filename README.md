@@ -6,6 +6,15 @@
 * Terminal
 
 
+Keep the following folders outside of the repo:
+```
+workspace/training_demo/pre_trained_model/centernet_resnet50_v1_fpn_512x512_coco17_tpu-8/* 
+workspace/training_demo/models/centernet/ckpt-* 
+```
+
+
+
+
 ```bash
 sudo apt-get update && sudo apt-get upgrade
 sudo apt install python3-pip
