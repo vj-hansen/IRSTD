@@ -14,15 +14,15 @@ workspace/training_demo/models/centernet/ckpt-*
 
 ### Compress the follow dirs
 ```
-tar -czvf saved_model.tar.gz /path/
+tar -czvf saved_model.tar.gz /home/paperspace/exported-models/my_centernet
 
-tar -czvf tensorboard.tar.gz /path/
+tar -czvf tensorboard_data.tar.gz /home/paperspace/centernet/train
 
 
 curl --upload-file saved_model.tar.gz https://transfer.sh/saved_model.tar.gz
 
 
-curl --upload-file tensorboard.tar.gz https://transfer.sh/tensorboard.tar.gz
+curl --upload-file tensorboard_data.tar.gz https://transfer.sh/tensorboard_data.tar.gz
 ```
 
 
