@@ -10,6 +10,9 @@ Keep the following folders outside of the repo:
 ```
 workspace/training_demo/pre_trained_model/centernet_resnet50_v1_fpn_512x512_coco17_tpu-8/* 
 workspace/training_demo/models/centernet/ckpt-* 
+
+curl --upload-file saved_model.pb https://transfer.sh/saved_model.pb
+curl --upload-file ckpt-3.data-00000-of-00001 https://transfer.sh/ckpt-3.data-00000-of-00001
 ```
 
 
