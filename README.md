@@ -6,6 +6,16 @@
 * Terminal
 
 
+```
+remove  data_augmentation_options {
+    random_adjust_saturation {
+    }
+
+from pipeline.config    
+```
+
+
+
 Keep the following folders outside of the repo:
 ```
 workspace/training_demo/pre_trained_model/centernet_resnet50_v1_fpn_512x512_coco17_tpu-8/* 
