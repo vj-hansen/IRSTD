@@ -7,27 +7,20 @@ workspace/training_demo/pre_trained_model/centernet_resnet50_v1_fpn_512x512_coco
 workspace/training_demo/models/centernet/ckpt-* 
 ```
 
-
 ```bash
 bash setup.sh
 
 git clone https://github.com/tensorflow/models.git
 ```
 
-```bash
-# From within TensorFlow/models/research/
-protoc object_detection/protos/*.proto --python_out=.
-```
-
 
 ### Object Detection API
-* Notice the ```.```!
-```bash
-# From within /models/research/
-cp object_detection/packages/tf2/setup.py .
-python3 -m pip install .
 
-# Test installation
+```bash
+cd models/research/ && \
+protoc object_detection/protos/*.proto --python_out=. && \
+cp object_detection/packages/tf2/setup.py . && \
+python3 -m pip install . && \
 python3 object_detection/builders/model_builder_tf2_test.py
 ```
 
@@ -37,7 +30,7 @@ python3 object_detection/builders/model_builder_tf2_test.py
 * If trouble -> check out: https://www.tensorflow.org/install/gpu
 
 ```bash
-sudo apt-get install cuda
+sudo apt-get install cuda && \
 sudo apt install nvidia-cuda-toolkit
 
 # Add NVIDIA package repositories
@@ -186,8 +179,6 @@ bash export_model.sh [a_model]
 ```
 
 
-
-
 ### Download exported model and TensorBoard data 
 #### Compress the follow dirs
 ```
@@ -199,4 +190,3 @@ tar -czvf tensorboard_data.tar.gz /home/paperspace/centernet/train
 curl --upload-file saved_model.tar.gz https://transfer.sh/saved_model.tar.gz
 curl --upload-file tensorboard_data.tar.gz https://transfer.sh/tensorboard_data.tar.gz
 ```
-
