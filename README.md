@@ -22,18 +22,6 @@ workspace/training_demo/pre_trained_model/centernet_resnet50_v1_fpn_512x512_coco
 workspace/training_demo/models/centernet/ckpt-* 
 ```
 
-### Compress the follow dirs
-```
-tar -czvf saved_model.tar.gz /home/paperspace/exported-models/my_centernet
-
-tar -czvf tensorboard_data.tar.gz /home/paperspace/centernet/train
-
-
-curl --upload-file saved_model.tar.gz https://transfer.sh/saved_model.tar.gz
-
-
-curl --upload-file tensorboard_data.tar.gz https://transfer.sh/tensorboard_data.tar.gz
-```
 
 
 
@@ -140,7 +128,7 @@ cp -v pre_trained_model/[downloaded_model]/pipeline.config models/[my_model]
 num_classes: 1
 
 ...
-batch_size: 32 # e.g.
+batch_size: 32 # e.g. higher batch size = more memory used
 
 ... 
 # Comment fine_tune_checkpoint: "p" 
@@ -208,7 +196,7 @@ rm -rf checkpoint && rm -rf ckpt-* && rm -rf train
 ```bash
 cd workspace/training_demo
 
-# Start TensorBoard
+# Start TensorBoard, this can be done after the training is done
 tensorboard --logdir=models/[a_model]
 # opens at http://localhost:6006/
 
@@ -220,3 +208,19 @@ bash run_train.sh [a_model]
 ```bash
 bash export_model.sh [a_model]
 ```
+
+
+
+
+### Download exported model and TensorBoard data 
+#### Compress the follow dirs
+```
+
+tar -czvf saved_model.tar.gz /home/paperspace/exported-models/my_centernet
+tar -czvf tensorboard_data.tar.gz /home/paperspace/centernet/train
+
+
+curl --upload-file saved_model.tar.gz https://transfer.sh/saved_model.tar.gz
+curl --upload-file tensorboard_data.tar.gz https://transfer.sh/tensorboard_data.tar.gz
+```
+
