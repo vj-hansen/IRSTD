@@ -1,39 +1,15 @@
 # InfraRed Small Target Detection
 
-
-* PaperSpace
-* Machine
-* Terminal
-
-
-```
-remove  data_augmentation_options {
-    random_adjust_saturation {
-    }
-
-from pipeline.config    
-```
-
-
-
 Keep the following folders outside of the repo:
 ```
+# too large for GitHub
 workspace/training_demo/pre_trained_model/centernet_resnet50_v1_fpn_512x512_coco17_tpu-8/* 
 workspace/training_demo/models/centernet/ckpt-* 
 ```
 
 
-
-
-
 ```bash
-sudo apt-get update && sudo apt-get upgrade
-sudo apt install python3-pip
-sudo apt-get install python-tk protobuf-compiler python-lxml python-pil
-pip3 install -r requirements.txt
-
-pip3 install --user --upgrade tensorflow
-pip3 install --user --upgrade tensorflow-gpu
+bash setup.sh
 
 git clone https://github.com/tensorflow/models.git
 ```
