@@ -8,7 +8,7 @@ workspace/training_demo/models/centernet/ckpt-*
 ```
 
 ```bash
-bash setup.sh
+bash setup_linux.sh
 
 git clone https://github.com/tensorflow/models.git
 ```
@@ -141,7 +141,7 @@ TensorFlow/
         ├─ images/
         │  ├─ test/
         │  └─ train/
-        ├─ models/
+        ├─ my_models/
         │   └── [a_model] (model under evaluation)
         │       └── pipeline.config
         ├─ model_main_tf2.py
