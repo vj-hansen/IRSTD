@@ -3,11 +3,13 @@
 Keep the following folders outside of the repo:
 ```
 # too large for GitHub
-workspace/training_demo/pre_trained_model/centernet_resnet50_v1_fpn_512x512_coco17_tpu-8/* 
-workspace/training_demo/models/centernet/ckpt-* 
+Desktop/pre_trained_model/centernet_resnet50_v1_fpn_512x512_coco17_tpu-8/
+Desktop/centernet/
 ```
 
 ```bash
+cd IRSTD/
+
 bash setup_linux.sh
 
 git clone https://github.com/tensorflow/models.git
@@ -69,24 +71,26 @@ nvcc --version
 ```
 
 ### Download model
-* cd to ```workspace/training_demo/pre_trained_model```
+* ```cd Desktop/```
+* ```mkdir pre_trained_model```
+
 * Pick a model from [TensorFlow Model Zoo](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/tf2_detection_zoo.md)
 
-```
+```bash
 # e.g. CenterNet MobileNetV2 FPN 512x512
+cd pre_trained_model
 wget -c http://download.tensorflow.org/models/object_detection/tf2/20210210/centernet_mobilenetv2fpn_512x512_coco17_od.tar.gz -O - | tar -xz
 
 
-# Need to copy pipeline.config from the downloaded model into a new dir: models/[my_model]/
-cd models/
+# Need to copy pipeline.config from the downloaded model into a new dir: Desktop/centernet/
+cd Desktop/
 
-# create a folder
-mkdir my_model
+# create folder
+mkdir centernet
 
 
-# from workspace/training_demo
-
-cp -v pre_trained_model/[downloaded_model]/pipeline.config models/[my_model]
+# from Desktop/
+cp -v pre_trained_model/[downloaded_model]/pipeline.config /centernet
 ```
 
 ### Configurate pipeline
@@ -123,39 +127,38 @@ max_evals: 10
 
 ### Folder structure
 ```
-TensorFlow/
-├─ models/
-│   ├─ .../
-│   ├─ .../
-│   ├─ .../
-│   └── research
-│       ├── object_detection
-│       └── ...
-└─ workspace/
-    └─ training_demo/
-        ├─ data/
-        │  ├─ label_map.pbtxt
-        │  ├─ train.record
-        │  └─ test.record
-        ├─ exported-models/
-        ├─ images/
-        │  ├─ test/
-        │  └─ train/
-        ├─ my_models/
-        │   └── [a_model] (model under evaluation)
-        │       └── pipeline.config
-        ├─ model_main_tf2.py
-        ├─ exporter_main_v2.py
-        ├─ pre_trained_model/
-        └─ run_train.sh
+
+Desktop/
+├─ IRSTD/
+│    ├─ models/
+│    │   ├─ .../
+│    │   ├─ .../
+│    │   └── research/
+│    │       ├── object_detection/
+│    │       └── ...
+│    └─ workspace/
+│        ├─ data/
+│        │   ├─ label_map.pbtxt
+│        │   ├─ train.record
+│        │   └─ test.record
+│        ├─ model_main_tf2.py
+│        ├─ exporter_main_v2.py
+│        ├─ eval.sh
+│        ├─ export_model.sh
+│        └─ run_train.sh
+├─ pre_trained_model/
+│   └── centernet_resnet50_v1_fpn_512x512_coco17_tpu-8/
+├─ exported-models/
+└─ centernet/
+    └── pipeline.config
+
 ```
 
 ---
 
-
 #### To start the training from scratch
 ```bash
-# Remove ckpt files in models/[a_model] 
+# Remove ckpt files in Desktop/centernet 
 rm -rf checkpoint && rm -rf ckpt-* && rm -rf train
 ```
 
@@ -163,24 +166,24 @@ rm -rf checkpoint && rm -rf ckpt-* && rm -rf train
 ### Start training
 
 ```bash
-cd workspace/training_demo
+cd IRSTD/workspace/
 
 # Start TensorBoard, this can be done after the training is done
-tensorboard --logdir=models/[a_model]
+tensorboard --logdir=saved_models/centernet
 # opens at http://localhost:6006/
 
-bash run_train.sh [a_model]
+bash run_train.sh centernet
 ```
 
 ### Export model
 
 ```bash
-bash export_model.sh [a_model]
+bash export_model.sh centernet
 ```
 
 ### Eval model
 ```bash
-bash eval.sh [model]
+bash eval.sh centernet
 ```
 
 ### Download exported model and TensorBoard data 
