@@ -135,7 +135,7 @@ Desktop/
 │    │   ├─ .../
 │    │   └── research/
 │    │       ├── object_detection/
-│    │       └── ...
+│    │       └── .../
 │    └─ workspace/
 │        ├─ data/
 │        │   ├─ label_map.pbtxt
