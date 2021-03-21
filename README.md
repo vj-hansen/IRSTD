@@ -178,6 +178,10 @@ bash run_train.sh [a_model]
 bash export_model.sh [a_model]
 ```
 
+### Eval model
+```bash
+bash eval.sh [model]
+```
 
 ### Download exported model and TensorBoard data 
 #### Compress the follow dirs
