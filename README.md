@@ -191,9 +191,15 @@ bash eval.sh centernet
 ```
 
 tar -czvf saved_model.tar.gz /home/paperspace/exported-models/my_centernet
-tar -czvf tensorboard_data.tar.gz /home/paperspace/centernet/train
+tar -czvf tboard_train_data.tar.gz /home/paperspace/centernet/train
+
+tar -czvf tboard_eval_data.tar.gz /home/paperspace/centernet/eval
 
 
 curl --upload-file saved_model.tar.gz https://transfer.sh/saved_model.tar.gz
-curl --upload-file tensorboard_data.tar.gz https://transfer.sh/tensorboard_data.tar.gz
+
+curl --upload-file tboard_train_data.tar.gz https://transfer.sh/tboard_train_data.tar.gz
+
+curl --upload-file tboard_eval_data.tar.gz https://transfer.sh/tboard_eval_data.tar.gz
+
 ```
