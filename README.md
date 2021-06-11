@@ -1,3 +1,3 @@
 # InfraRed Small Target Detection
 
-### - [Training data-driven method](../master/TRAINING.md)
+### - [Training data-driven method](../main/TRAINING.md)
