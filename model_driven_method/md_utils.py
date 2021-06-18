@@ -94,10 +94,10 @@ def read_xml(path, in_file):
     Returns:
         Numpy array
     """
-    xml_list = []
-    full_path = path+in_file+'.xml'
-    tree = ET.parse(full_path)
-    root = tree.getroot()
+    xml_list    = []
+    full_path   = path+in_file+'.xml'
+    tree        = ET.parse(full_path)
+    root        = tree.getroot()
     for member in root.findall('object'):
         # the number of 'object' in the file dictates how many targets we have
         if len(member) == 7: # some xml files contain extra info on "pixels"
@@ -114,8 +114,8 @@ def read_xml(path, in_file):
                     int(member[4][3].text))
         xml_list.append(value)
     column_name = ['filename', 'xmin', 'ymin', 'xmax', 'ymax']
-    xml_df = pd.DataFrame(xml_list, columns=column_name)
-    xml_np = xml_df.to_numpy()
+    xml_df      = pd.DataFrame(xml_list, columns=column_name)
+    xml_np      = xml_df.to_numpy()
     return xml_np
 
 
@@ -190,15 +190,16 @@ def get_target_loc(img_file, thresh, delta):
             # the placement of [x(i), y(i)] and [x(i-1), y(i-1)] must be
             # different by at least delta pixels
             if (diff_x > delta) and (diff_y > delta) \
-                and x_p_a[0] != x_p_a[len(x_v)-1] \
-                and y_p_a[0] != y_p_a[len(x_v)-1]:
+                    and x_p_a[0] != x_p_a[len(x_v)-1] \
+                    and y_p_a[0] != y_p_a[len(x_v)-1]:
                 r_x_p_a.append(x_p_a[i])
                 r_y_p_a.append(y_p_a[i])
                 circ_img = cv2.circle(circ_img_rgb, (x, y), radius, (0, 255, 0), 2)
             else:
                 circ_img = circ_img_rgb
     if len(x_v) != 0 and len(y_v) != 0:
-        if abs(x_p_a[0] - x_p_a[len(x_v)-1]) < delta and abs(y_p_a[0] - y_p_a[len(x_v)-1]) < delta:
+        if abs(x_p_a[0] - x_p_a[len(x_v)-1]) < delta and
+                abs(y_p_a[0] - y_p_a[len(x_v)-1]) < delta:
             r_x_p_a.pop()
             r_y_p_a.pop()
     return circ_img, r_x_p_a, r_y_p_a
