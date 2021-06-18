@@ -1,7 +1,6 @@
 """
-Load ONNX models in order to extract weights from the feature extractor.
-
-Update: 06-06-21, VJH
+Load ONNX models in order to extract
+weights from the feature extractor.
 """
 
 import onnx
@@ -39,7 +38,7 @@ def convolve2d(image, kernel):
     for x in range(image.shape[1]):
         for y in range(image.shape[0]):
             # element-wise multiplication of the kernel and the image
-            output[y, x]=(kernel * image_padded[y: y+3, x: x+3]).sum()
+            output[y, x] = (kernel * image_padded[y: y+3, x: x+3]).sum()
     return output
 
 MODEL_STR = 'DD-v2.onnx'
@@ -52,7 +51,7 @@ W_PATH_ALL = "StatefulPartitionedCall/center_net_resnet_v1fpn_feature_extractor/
 # "conv4_block1_2_conv/BiasAdd_weights_fused_bn"
 # "conv5_block1_2_conv/BiasAdd_weights_fused_bn"
 
-for i in range(2,6):
+for i in range(2, 6):
     [tensor] = [t for t in model.graph.initializer if t.name == W_PATH_ALL
         +"conv"+str(i)+"_block1_2_conv/BiasAdd_weights_fused_bn"]
     wghts = numpy_helper.to_array(tensor)

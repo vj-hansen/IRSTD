@@ -87,7 +87,7 @@ mkdir centernet
 
 
 # from Desktop/
-cp -v pre_trained_model/[downloaded_model]/pipeline.config /centernet
+cp -v pre_trained_model/[downloaded_model]/pipeline.config/centernet
 ```
 
 ### Configurate pipeline
@@ -185,7 +185,7 @@ bash eval.sh centernet
 
 ### Download exported model and TensorBoard data 
 #### Compress the follow dirs
-```
+```bash
 
 tar -czvf saved_model.tar.gz /home/paperspace/exported-models/my_centernet
 tar -czvf tboard_train_data.tar.gz /home/paperspace/centernet/train

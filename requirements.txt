@@ -11,5 +11,5 @@ pandas
 tensorflow-datasets
 tf-slim
 Cython
-lvis 
+lvis
 
