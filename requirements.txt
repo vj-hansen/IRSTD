@@ -12,4 +12,3 @@ tensorflow-datasets
 tf-slim
 Cython
 lvis
-
