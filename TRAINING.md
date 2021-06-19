@@ -32,7 +32,7 @@ python3 object_detection/builders/model_builder_tf2_test.py
 
 ### Install GPU support for TensorFlow (Ubuntu 18.04 LTS)
 
-* If trouble -> check out: https://www.tensorflow.org/install/gpu
+* Check out https://www.tensorflow.org/install/gpu if you experience any problems.
 
 ```bash
 sudo apt-get install cuda && \
