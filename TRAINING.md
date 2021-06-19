@@ -1,9 +1,15 @@
+# Training data-driven method
+
+
+
 Keep the following folders outside of the repo:
-```
+```bash
 # too large for GitHub
 Desktop/pre_trained_model/centernet_resnet50_v1_fpn_512x512_coco17_tpu-8/
 Desktop/centernet/
 ```
+---
+
 
 ```bash
 cd IRSTD/
@@ -78,13 +84,11 @@ nvcc --version
 cd pre_trained_model
 wget -c http://download.tensorflow.org/models/object_detection/tf2/20210210/centernet_mobilenetv2fpn_512x512_coco17_od.tar.gz -O - | tar -xz
 
-
 # Need to copy pipeline.config from the downloaded model into a new dir: Desktop/centernet/
 cd Desktop/
 
 # create folder
 mkdir centernet
-
 
 # from Desktop/
 cp -v pre_trained_model/[downloaded_model]/pipeline.config/centernet
@@ -109,11 +113,9 @@ use_bfloat16: false # Set this to false if you are not training on a TPU
 label_map_path: "data/label_map.pbtxt"
 input_path: "data/train.record"
 
-
 ... in eval_config
 num_examples: 268 # num_examples = number of items in 'test.record'-file
 max_evals: 10
-
 
 ... eval_input_reader
   label_map_path: "data/label_map.pbtxt"
@@ -124,7 +126,6 @@ max_evals: 10
 
 ### Folder structure
 ```
-
 Desktop/
 ├─ IRSTD/
 │    ├─ models/
@@ -148,7 +149,6 @@ Desktop/
 ├─ exported-models/
 └─ centernet/
     └── pipeline.config
-
 ```
 
 ---
@@ -186,17 +186,11 @@ bash eval.sh centernet
 ### Download exported model and TensorBoard data 
 #### Compress the follow dirs
 ```bash
-
 tar -czvf saved_model.tar.gz /home/paperspace/exported-models/my_centernet
 tar -czvf tboard_train_data.tar.gz /home/paperspace/centernet/train
-
 tar -czvf tboard_eval_data.tar.gz /home/paperspace/centernet/eval
 
-
 curl --upload-file saved_model.tar.gz https://transfer.sh/saved_model.tar.gz
-
 curl --upload-file tboard_train_data.tar.gz https://transfer.sh/tboard_train_data.tar.gz
-
 curl --upload-file tboard_eval_data.tar.gz https://transfer.sh/tboard_eval_data.tar.gz
-
 ```
