@@ -18,11 +18,11 @@ from matplotlib import pyplot as plt
 from pcp import pcp_func
 from md_utils import read_xml, pts_near, get_target_loc
 
-
-TEST_DIR    = "test_imgs/"
+cwd = os.getcwd()
+TEST_DIR    = cwd+"/model_driven_method/test_imgs/"
 #TEST_DIR   = "../dataset/dataset_images/target_test/"
 img_dir     = os.listdir(TEST_DIR)
-SAVE_DIR    = 'detection_pics/'
+SAVE_DIR    = 'model_driven_method/detection_pics/'
 
 if not os.path.exists(SAVE_DIR):
     os.makedirs(SAVE_DIR)

@@ -198,7 +198,7 @@ def get_target_loc(img_file, thresh, delta):
             else:
                 circ_img = circ_img_rgb
     if len(x_v) != 0 and len(y_v) != 0:
-        if abs(x_p_a[0] - x_p_a[len(x_v)-1]) < delta and
+        if abs(x_p_a[0] - x_p_a[len(x_v)-1]) < delta and \
                 abs(y_p_a[0] - y_p_a[len(x_v)-1]) < delta:
             r_x_p_a.pop()
             r_y_p_a.pop()
