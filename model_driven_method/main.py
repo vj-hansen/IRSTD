@@ -33,7 +33,7 @@ TRUE_POS        = 0
 FALSE_POS       = 0
 FALSE_NEG       = 0
 TOTAL_GT_OBJ    = 0
-
+global final_str
 images          = []
 img_filename    = []
 total_detc      = []
@@ -79,7 +79,8 @@ for it, file in enumerate(filelist):
 
     img_filename.append(file.split(".")[0])
     plt.imsave('t_img.jpg', T.reshape(im_shape), cmap = 'gray')
-    print(str(GT_OBJECTS_IN_IMG) + ' object(s) in ' + file)
+    final_str = str(GT_OBJECTS_IN_IMG) + ' object(s) in ' + file
+    print(final_str)
 
     circ_img_rgb, pcx_pos, pcy_pos = get_target_loc('t_img.jpg',
                                                     thresh  = THRESH_PARAM,
@@ -149,7 +150,6 @@ for it, file in enumerate(filelist):
 
     cv2.imwrite(SAVE_DIR+IM_STATUS+'_'+METHOD_PARAM+'_'+str(TOL_PARAM)+'_'+str(MAX_IT_PARAM)+
                 '_'+str(THRESH_PARAM)+'_'+file.split(".")[0]+'_target.jpg', circ_img_rgb)
-
 avg_time = TOTAL_TIME/(len(filelist))
 print("Avg. time per img.: %.2f s" % avg_time)
 print("TP: ", TRUE_POS)
