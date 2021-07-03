@@ -7,12 +7,16 @@ import threading
 import time
 from tkinter.filedialog import askdirectory
 
+# create function for killing processes
+# run: ps a
+# run: kill -9 <all PID related to python3 model_driven..>
 
 def run_cmd_1(loc):
     try:
-        t1 = threading.Thread(
-            target=subprocess.run(["python3", "data_driven_method/test_model.py", "--path",loc],
-            stdout=subprocess.PIPE)).start()
+        print(app.get_loc())
+        #t1 = threading.Thread(
+        ##    target=subprocess.run(["python3", "data_driven_method/test_model.py", "--path", loc],
+         #   stdout=subprocess.PIPE)).start()
     except Exception as e:
         raise
     else:
@@ -21,12 +25,17 @@ def run_cmd_1(loc):
         pass
 
 
-def run_cmd_2():
+def run_cmd_2(loc):
+    loc = app.get_loc()
     try:
-        res = subprocess.run(["python3", "model_driven_method/main.py"], stdout=subprocess.PIPE)
-        txtBox = tk.Text(app, relief=RIDGE, borderwidth=2)
-        txtBox.grid()
-        txtBox.insert('end', res.stdout)
+        #res = subprocess.run(["python3", "model_driven_method/main.py", "--path", loc],
+        #    stdout=subprocess.PIPE)
+        subprocess.run("cal")
+        print(loc)
+        #res = subprocess.run(["python3", "model_driven_method/main.py", "--path", loc])
+       # txtBox = tk.Text(app, relief=tk.RIDGE, borderwidth=2)
+       # txtBox.grid()
+       # txtBox.insert('end', res.stdout)
     except Exception as e:
         raise
     else:
@@ -35,15 +44,23 @@ def run_cmd_2():
         pass
 
 class Application(tk.Tk):
-    def __init__(self):
+    def __init__(self, location=""):
         super().__init__()
+        self._location = location
         self.geometry('600x300')
         self.title('IRSTD')
         self.createButtons()
 
+    def get_loc(self):
+        return self._location
+
+    def set_loc(self, x):
+        self._location = x
+
+
     def select_v_path(self):
         self.location = askdirectory()
-        print(self.location) # send this as argument to run_cmd_1
+        self.set_loc(self.location)
         if self.video_path.get() != "":
             self.video_path.delete(0, tk.END)
             self.video_path.insert(tk.END, self.location)
@@ -86,21 +103,43 @@ class Application(tk.Tk):
         self.file.place(relx=0.6, rely=0.55)
 
 
-        Time = tk.Frame(self)
-        Time.grid(row=5, column=0, columnspan=3)
 
-        tk.Button(Time,
-                text="Data Driven",
-                fg="blue",
-                command = run_cmd_1).grid(row=4, column=1)
-        tk.Button(Time,
-                text="Model Driven",
-                fg="blue",
-                command = run_cmd_2).grid(row=4, column=2)
-        tk.Button(Time,
-                text="Quit",
-                fg="Red",
-                command = self.destroy).grid(row=4, column=3)
+        Time = tk.LabelFrame(
+            self,
+            text    = "ABC",
+            width   = 200,
+            height  = 200,
+            font    = ('Menlo', 10, 'bold'),
+            relief  = tk.SUNKEN)
+        Time.place(relx=0.6, rely=0.2)
+        loc = self.get_loc()
+
+        self.dd = tk.Button(Time,
+                text    = "Data\nDriven",
+                height  = 2,
+                width   = 3,
+                fg      = "blue",
+                command = lambda : run_cmd_1(loc))
+
+        self.dd.place(relx=0.1, rely=0.5)
+
+        self.md = tk.Button(
+                Time,
+                text    = "Model\nDriven",
+                height  = 2,
+                width   = 3,
+                fg      = "blue",
+                command = lambda : run_cmd_2(loc))
+        self.md.place(relx=0.1, rely=0.05)
+
+        self.qt = tk.Button(
+                Time,
+                text    = "Quit",
+                fg      = "Red",
+                height  = 1,
+                width   = 2,
+                command = self.destroy)
+        self.qt.place(relx=0.5, rely=0.1)
 
 app = Application()
 app.mainloop()

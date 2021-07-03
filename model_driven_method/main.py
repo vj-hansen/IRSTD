@@ -20,21 +20,14 @@ from pcp import pcp_func
 from md_utils import read_xml, pts_near, get_target_loc
 
 
-def dir_path(string):
-    if os.path.isdir(string):
-        return string
-    else:
-        raise NotADirectoryError(string)
-
 parser = argparse.ArgumentParser()
 parser.add_argument(
-    '--path', required=True, help="dataset path", type=dir_path)
+    '--path', required=True, help="dataset path")
 
 args        = parser.parse_args()
-TEST_DIR    = args.path +'/'
+TEST_DIR    = args.path + "/"
 img_dir     = os.listdir(TEST_DIR)
 SAVE_DIR    = 'detection_pics/'
-
 
 if not os.path.exists(SAVE_DIR):
     os.makedirs(SAVE_DIR)
