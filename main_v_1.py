@@ -43,11 +43,14 @@ def run_cmd_2(loc):
     finally:
         pass
 
+WINDOW_W = 1024
+WINDOW_H = 768
+
 class Application(tk.Tk):
     def __init__(self, location=""):
         super().__init__()
         self._location = location
-        self.geometry('600x300')
+        self.geometry(str(WINDOW_W)+'x'+str(WINDOW_H))
         self.title('IRSTD')
         self.createButtons()
 
@@ -56,7 +59,6 @@ class Application(tk.Tk):
 
     def set_loc(self, x):
         self._location = x
-
 
     def select_v_path(self):
         self.location = askdirectory()
@@ -73,72 +75,56 @@ class Application(tk.Tk):
         tkinter.ttk.Separator(self, orient="horizontal").grid(row=1, column=0, columnspan=5, sticky='ew')
 
         frame1 = tk.LabelFrame(
-            self,
-            text    = "model_driven_method",
-            width   = 150,
-            height  = 150,
-            font    = ('Menlo', 10, 'bold'),
-            relief  = tk.SUNKEN)
+                self, 
+                text="model_driven_method",
+                width=WINDOW_W/2, 
+                height=WINDOW_H/2)
         frame1.place(relx=0.2, rely=0.2)
 
-        self.v_path = tk.Label(
-            frame1,
-            text="Select Path", font=('Menlo',10,'bold'))
+        self.v_path = tk.Label(frame1, text="Select Path")
         self.v_path.place(relx=0.05, rely=0.45)
 
 
         self.video_path = tk.Entry(
-            frame1,
-            width   = 6,
-            relief  = tk.SUNKEN)
+                frame1, width=6, relief=tk.SUNKEN)
         self.video_path.place(relx=0.1, rely=0.55)
 
         self.file = tk.Button(
-            frame1,
-            text    = "Browse",
-            font    = ('Menlo', 8),
-            height  = 1,
-            width   = 2,
-            command = self.select_v_path)
+                frame1, 
+                text="Browse",
+                command=self.select_v_path)
         self.file.place(relx=0.6, rely=0.55)
 
 
-
         Time = tk.LabelFrame(
-            self,
-            text    = "ABC",
-            width   = 200,
-            height  = 200,
-            font    = ('Menlo', 10, 'bold'),
-            relief  = tk.SUNKEN)
+                self, 
+                text="Frame2",
+                width=WINDOW_W/2, 
+                height=WINDOW_H/2)
         Time.place(relx=0.6, rely=0.2)
+        
         loc = self.get_loc()
 
-        self.dd = tk.Button(Time,
-                text    = "Data\nDriven",
-                height  = 2,
-                width   = 3,
-                fg      = "blue",
-                command = lambda : run_cmd_1(loc))
+        self.dd = tk.Button(
+                Time, 
+                text="Data\nDriven",
+                fg="blue", 
+                command=lambda : run_cmd_1(loc))
 
         self.dd.place(relx=0.1, rely=0.5)
 
         self.md = tk.Button(
-                Time,
-                text    = "Model\nDriven",
-                height  = 2,
-                width   = 3,
-                fg      = "blue",
-                command = lambda : run_cmd_2(loc))
+                Time, 
+                text="Model\nDriven",
+                fg="blue", 
+                command=lambda : run_cmd_2(loc))
         self.md.place(relx=0.1, rely=0.05)
 
         self.qt = tk.Button(
                 Time,
-                text    = "Quit",
-                fg      = "Red",
-                height  = 1,
-                width   = 2,
-                command = self.destroy)
+                text="Quit",
+                fg="Red",
+                command=self.destroy)
         self.qt.place(relx=0.5, rely=0.1)
 
 app = Application()
