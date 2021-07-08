@@ -20,7 +20,7 @@ def save_image(
     cv2.imwrite(
             '/Users/victor/Google Drive/detection_pics/'
             + model + "_"
-    		+ str(score_thresh) + acc + "_" + img_filename
+            + str(score_thresh) + acc + "_" + img_filename
             + '.jpg', image)
 
 
@@ -42,7 +42,7 @@ def read_xml(path, in_file):
     root = tree.getroot()
     for member in root.findall('object'):
         # the number of 'object' in the file dictates how many targets we have
-        if len(member) == 7: # some xml files contain extra info on "pixels"
+        if len(member) == 7:  # some xml files contain extra info on "pixels"
             value = (root.find('filename').text,
                     int(member[6][0].text),
                     int(member[6][1].text),

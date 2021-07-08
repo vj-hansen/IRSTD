@@ -22,7 +22,7 @@ os.environ['TF_XLA_FLAGS'] = '--tf_xla_enable_xla_devices'
 warnings.filterwarnings('ignore')
 
 SCORE_THRESH = 0.5
-MODEL = "DD-v1" #DD-v1 or DD-v2
+MODEL = "DD-v1"  # DD-v1 or DD-v2
 PATH_TO_SAVED_MODEL = "../saved_models/"+MODEL+"/saved_model/"
 TEST_DIR = "../dataset/dataset_images/target_test/"
 LABEL_MAP_DIR = "../saved_models/label_map.pbtxt"
@@ -58,14 +58,14 @@ for it, file in enumerate(filelist):
         image_np = np.array(image_np)
         if os.path.isfile(TEST_DIR+file.split(".")[0]):
             read_xml_file = read_xml(TEST_DIR, file.split(".")[0])
-            GT_OBJECTS_IN_IMG = len(read_xml_file) # number of gt objects for this image file
+            GT_OBJECTS_IN_IMG = len(read_xml_file)
         else:
             GT_OBJECTS_IN_IMG = 0
         if len(image_np.shape) < 2:
             nimg = (image_np)
-            nimg[:,:,0] = image_np
-            nimg[:,:,1] = image_np
-            nimg[:,:,2] = image_np
+            nimg[:, :, 0] = image_np
+            nimg[:, :, 1] = image_np
+            nimg[:, :, 2] = image_np
         else:
             nimg = image_np
 
@@ -78,7 +78,7 @@ for it, file in enumerate(filelist):
     end = time.time()
     round_time = end-start
     TOTAL_TIME = TOTAL_TIME+round_time
-    detections = {key:value[0, :num_detections].numpy() for key, value in detections.items()}
+    detections = {key: value[0, :num_detections].numpy() for key, value in detections.items()}
     detections['num_detections'] = num_detections
     detections['detection_classes'] = detections['detection_classes'].astype(np.int64)
     img_w_detections = nimg.copy()
@@ -105,12 +105,12 @@ for it, file in enumerate(filelist):
 
     if (number_of_boxes-GT_OBJECTS_IN_IMG > 0) and (GT_OBJECTS_IN_IMG != 0):
         FALSE_POS += 1
-        #FP: predicts that an object exist when it DNE
+        # FP: predicts that an object exist when it DNE
         for i in range(GT_OBJECTS_IN_IMG):
             top_left_crner = (read_xml_file[i][1], read_xml_file[i][2])
             btm_right_crner = (read_xml_file[i][3], read_xml_file[i][4])
             save_image(
-                img_filename[it], images[it], "fp", MODEL, 
+                img_filename[it], images[it], "fp", MODEL,
                 SCORE_THRESH, top_left_crner, btm_right_crner)
 
     elif (GT_OBJECTS_IN_IMG-number_of_boxes > 0) and (GT_OBJECTS_IN_IMG != 0):
@@ -119,8 +119,8 @@ for it, file in enumerate(filelist):
         for j in range(GT_OBJECTS_IN_IMG):
             top_left_crner = (read_xml_file[j][1], read_xml_file[j][2])
             btm_right_crner = (read_xml_file[j][3], read_xml_file[j][4])
-            save_image( 
-                img_filename[it], images[it],"fn", MODEL, 
+            save_image(
+                img_filename[it], images[it], "fn", MODEL,
                 SCORE_THRESH, top_left_crner, btm_right_crner)
 
     elif (GT_OBJECTS_IN_IMG == 0) and (number_of_boxes > 0):
@@ -139,7 +139,6 @@ for it, file in enumerate(filelist):
             xmin = boxes[i][1]
             ymax = boxes[i][2]
             xmax = boxes[i][3]
-            # - W (width) and H (height) varies according to the resolution of the input
             W = (nimg.shape[1])
             H = (nimg.shape[0])
 
