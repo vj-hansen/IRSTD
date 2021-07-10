@@ -114,4 +114,5 @@ dmypy.json
 #macOS
 .DS_Store
 
-.py.orig
+*.py.orig
+*.coafile
