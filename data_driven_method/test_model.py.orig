@@ -78,11 +78,9 @@ for it, file in enumerate(filelist):
     end = time.time()
     round_time = end-start
     TOTAL_TIME = TOTAL_TIME+round_time
-    detections = {key: value[0, :num_detections].numpy()
-                  for key, value in detections.items()}
+    detections = {key: value[0, :num_detections].numpy() for key, value in detections.items()}
     detections['num_detections'] = num_detections
-    detections['detection_classes'] = detections['detection_classes'].astype(
-        np.int64)
+    detections['detection_classes'] = detections['detection_classes'].astype(np.int64)
     img_w_detections = nimg.copy()
     images.append(img_w_detections)
     img_filename.append(file.split(".")[0])

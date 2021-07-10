@@ -109,16 +109,13 @@ def get_iou(gt_bbx, pred_bbx):
         intersection_area = (x_right-x_left) * (y_bottom-y_top)
 
         # compute the area of both BBs
-        gt_bbx_area = (gt_bbx['xmax']-gt_bbx['xmin']) * \
-            (gt_bbx['ymax']-gt_bbx['ymin'])
-        pred_bbx_area = (pred_bbx['xmax']-pred_bbx['xmin']) * \
-            (pred_bbx['ymax']-pred_bbx['ymin'])
+        gt_bbx_area = (gt_bbx['xmax']-gt_bbx['xmin']) * (gt_bbx['ymax']-gt_bbx['ymin'])
+        pred_bbx_area = (pred_bbx['xmax']-pred_bbx['xmin']) * (pred_bbx['ymax']-pred_bbx['ymin'])
 
         # compute the intersection over union by taking the intersection
         # area and dividing it by the sum of prediction + ground-truth
-        # areas - the intersection area
-        iou = intersection_area / \
-            float(gt_bbx_area+pred_bbx_area-intersection_area)
+        # areas - the interesection area
+        iou = intersection_area / float(gt_bbx_area+pred_bbx_area-intersection_area)
         assert iou >= 0.0
         assert iou <= 1.0
     return iou, intersection_area

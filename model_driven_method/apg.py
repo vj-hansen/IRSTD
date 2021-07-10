@@ -3,8 +3,10 @@ Accelerated Proximal Gradient (APG)
 """
 
 from math import sqrt
+
 import numpy as np
 from numpy import linalg
+
 from md_utils import shrinking
 
 

@@ -6,11 +6,12 @@ Code is based on:
 
 import os
 import warnings
+
 import cv2
+import numpy as np
 import tensorflow as tf
 from object_detection.utils import label_map_util
 from object_detection.utils import visualization_utils as viz_utils
-import numpy as np
 
 os.environ['TF_XLA_FLAGS'] = '--tf_xla_enable_xla_devices'
 warnings.filterwarnings('ignore')

@@ -9,17 +9,17 @@ Dec. 2013, doi: 10.1109/TIP.2013.2281420.
 
 """
 
+import argparse
 import os
 import time
-import argparse
-import numpy as np
+
 import cv2
-from PIL import Image
+import numpy as np
 from matplotlib import pyplot as plt
+from PIL import Image
 
+from md_utils import get_target_loc, pts_near, read_xml
 from pcp import pcp_func
-from md_utils import read_xml, pts_near, get_target_loc
-
 
 parser = argparse.ArgumentParser()
 parser.add_argument(

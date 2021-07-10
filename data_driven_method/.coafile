@@ -1,0 +1,3 @@
+[abc]
+bears = PEP8Bear, PyUnusedCodeBear,
+        PycodestyleBear, FilenameBear, RadonBear
