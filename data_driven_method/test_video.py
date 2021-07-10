@@ -16,7 +16,7 @@ os.environ['TF_XLA_FLAGS'] = '--tf_xla_enable_xla_devices'
 warnings.filterwarnings('ignore')
 
 SCORE_THRESH = 0.5
-MODEL = "DD-v1" #DD-v1 or DD-v2
+MODEL = "DD-v1"  # DD-v1 or DD-v2
 PATH_TO_SAVED_MODEL = "../saved_models/"+MODEL+"/saved_model/"
 LABEL_MAP_DIR = "../saved_models/label_map.pbtxt"
 
@@ -35,7 +35,7 @@ while True:
     input_tensor = input_tensor[tf.newaxis, ...]
     detections = detect_fn(input_tensor)
     num_detections = int(detections.pop('num_detections'))
-    detections = {key:value[0, :num_detections].numpy() for key, value in detections.items()}
+    detections = {key: value[0, :num_detections].numpy() for key, value in detections.items()}
     detections['num_detections'] = num_detections
     detections['detection_classes'] = detections['detection_classes'].astype(np.int64)
     img_w_detections = nimg.copy()
@@ -55,8 +55,8 @@ while True:
     fps = cv2.getTickFrequency() / (cv2.getTickCount()-timer)
     cv2.flip(img_w_detections, 0)
     cv2.putText(
-        img_w_detections, "FPS: "+str(int(fps)), 
-        (100, 60), cv2.FONT_HERSHEY_SIMPLEX, 
+        img_w_detections, "FPS: "+str(int(fps)),
+        (100, 60), cv2.FONT_HERSHEY_SIMPLEX,
         1.0, (0, 0, 255), 2)
 
     cv2.imshow('CenterNet + ResNet50 FPN', cv2.resize(img_w_detections, (IM_W, IM_H)))

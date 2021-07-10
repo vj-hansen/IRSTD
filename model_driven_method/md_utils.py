@@ -27,7 +27,12 @@ def mat2gray(mat):
     img = np.zeros(np.shape(mat))
     divisor_mat = float(m_max-m_min)*(mat-m_min)
     if np.max(divisor_mat) > 0:
-        img = np.add(img, np.multiply(np.logical_and(np.greater_equal(mat, m_min), np.less(mat, m_max)), (1/float(m_max-m_min)*(mat-m_min))))
+        img = np.add(
+            img, np.multiply(
+                np.logical_and(
+                    np.greater_equal(mat, m_min),
+                    np.less(mat, m_max)),
+                (1/float(m_max-m_min)*(mat-m_min))))
     img = np.add(img, (np.greater_equal(mat, m_max)))
     return img
 
@@ -53,7 +58,8 @@ def sliding_window(
         for j in range(0, n - wndw_sz+1, step_sz):
             temp = img[i:i + wndw_sz, j:j + wndw_sz]
             og_img = np.append(og_img, [temp.flatten('F')])
-    og_img = np.reshape(og_img, (wndw_sz*wndw_sz, og_img.size//(wndw_sz*wndw_sz)), order='F')
+    og_img = np.reshape(
+        og_img, (wndw_sz*wndw_sz, og_img.size//(wndw_sz*wndw_sz)), order='F')
     return og_img
 
 
@@ -95,11 +101,14 @@ def read_xml(path, in_file):
     for member in root.findall('object'):
         # the number of 'object' in the file dictates how many targets we have
         if len(member) == 7:  # some xml files contain extra info on "pixels"
-            value = (root.find('filename').text, int(member[6][0].text),
+            value = (
+                    root.find('filename').text,
+                    int(member[6][0].text),
                     int(member[6][1].text), int(member[6][2].text),
                     int(member[6][3].text))
-        elif len(member) == 5: # 1 object
-            value = (root.find('filename').text, int(member[4][0].text),
+        elif len(member) == 5:  # 1 object
+            value = (
+                    root.find('filename').text, int(member[4][0].text),
                     int(member[4][1].text), int(member[4][2].text),
                     int(member[4][3].text))
         xml_list.append(value)
@@ -126,14 +135,14 @@ def pts_near(gt_bbx, pred_bbx, rad):
 
     # create a box region where anything outside
     # the box is not within the radius (rad).
-    if (abs(gt_bbx['centre_x'] - pred_bbx['centre_x']) > rad or
-         abs(gt_bbx['centre_y'] - pred_bbx['centre_y']) > rad):
+    if (
+            abs(gt_bbx['centre_x'] - pred_bbx['centre_x']) > rad or
+            abs(gt_bbx['centre_y'] - pred_bbx['centre_y']) > rad):
         pt_cls = False
 
     rad_sqrd = math.pow(rad, 2)
     # return true if the points are close
-    pt_cls = bool(rad_sqrd > (math.pow(gt_bbx['centre_x'] - pred_bbx['centre_x'], 2)
-                + math.pow((gt_bbx['centre_y'] - pred_bbx['centre_y']), 2)))
+    pt_cls = bool(rad_sqrd > (math.pow(gt_bbx['centre_x'] - pred_bbx['centre_x'], 2) + math.pow((gt_bbx['centre_y'] - pred_bbx['centre_y']), 2)))
     return pt_cls
 
 

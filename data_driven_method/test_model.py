@@ -1,5 +1,5 @@
 '''
-# Based on:
+Based on:
     https://github.com/tensorflow/hub/blob/master/examples/colab/tf2_object_detection.ipynb
 
 Test trained data-driven model on images.
@@ -115,7 +115,7 @@ for it, file in enumerate(filelist):
 
     elif (GT_OBJECTS_IN_IMG-number_of_boxes > 0) and (GT_OBJECTS_IN_IMG != 0):
         FALSE_NEG += 1
-        #FN: predicts that an object DNE when it does
+        # FN: predicts that an object DNE when it does
         for j in range(GT_OBJECTS_IN_IMG):
             top_left_crner = (read_xml_file[j][1], read_xml_file[j][2])
             btm_right_crner = (read_xml_file[j][3], read_xml_file[j][4])

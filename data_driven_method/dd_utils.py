@@ -43,17 +43,19 @@ def read_xml(path, in_file):
     for member in root.findall('object'):
         # the number of 'object' in the file dictates how many targets we have
         if len(member) == 7:  # some xml files contain extra info on "pixels"
-            value = (root.find('filename').text,
-                    int(member[6][0].text),
-                    int(member[6][1].text),
-                    int(member[6][2].text),
-                    int(member[6][3].text))
-        elif len(member) == 5: # 1 object
-            value = (root.find('filename').text,
-                    int(member[4][0].text),
-                    int(member[4][1].text),
-                    int(member[4][2].text),
-                    int(member[4][3].text))
+            value = (
+                root.find('filename').text,
+                int(member[6][0].text),
+                int(member[6][1].text),
+                int(member[6][2].text),
+                int(member[6][3].text))
+        elif len(member) == 5:  # 1 object
+            value = (
+                root.find('filename').text,
+                int(member[4][0].text),
+                int(member[4][1].text),
+                int(member[4][2].text),
+                int(member[4][3].text))
         xml_list.append(value)
     column_name = ['filename', 'xmin', 'ymin', 'xmax', 'ymax']
     xml_df = pd.DataFrame(xml_list, columns=column_name)

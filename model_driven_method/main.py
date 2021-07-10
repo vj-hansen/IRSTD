@@ -58,9 +58,9 @@ def main():
             tmp_img.save('img.jpg')
             if os.path.isfile(fullpath):
                 read_xml_file = read_xml(TEST_DIR, file.split(".")[0])
-                GT_OBJECTS_IN_IMG = len(read_xml_file)
+                gt_objects_in_img = len(read_xml_file)
             else:
-                GT_OBJECTS_IN_IMG = 0
+                gt_objects_in_img = 0
 
         img = plt.imread('img.jpg')
         m, n = img.shape
@@ -77,11 +77,11 @@ def main():
         round_time = end-start
         TOTAL_TIME = TOTAL_TIME + round_time
         print("Total time: %.2f s" % round_time)
-        TOTAL_GT_OBJ = GT_OBJECTS_IN_IMG + TOTAL_GT_OBJ
+        TOTAL_GT_OBJ = gt_objects_in_img + TOTAL_GT_OBJ
 
         img_filename.append(file.split(".")[0])
         plt.imsave('t_img.jpg', T.reshape(im_shape), cmap='gray')
-        final_str = str(GT_OBJECTS_IN_IMG)+' object(s) in '+file
+        final_str = str(gt_objects_in_img)+' object(s) in '+file
         print(final_str)
 
         circ_img_rgb, pcx_pos, pcy_pos = get_target_loc('t_img.jpg',
@@ -92,8 +92,8 @@ def main():
         gtcx_arr = []
         gtcy_arr = []
         status_img = []
-        if GT_OBJECTS_IN_IMG != 0:  # GT objects in image
-            for iter1 in range(GT_OBJECTS_IN_IMG):
+        if gt_objects_in_img != 0:  # GT objects in image
+            for iter1 in range(gt_objects_in_img):
                 ymin_xml = read_xml_file[iter1][2]
                 xmin_xml = read_xml_file[iter1][1]
                 ymax_xml = read_xml_file[iter1][4]
@@ -107,18 +107,18 @@ def main():
         if len(pcx_pos) != 0:
             p_order = np.argsort(pcx_pos)
             gt_order = np.argsort(gtcx_arr)
-            if GT_OBJECTS_IN_IMG == len(pcx_pos):
+            if gt_objects_in_img == len(pcx_pos):
                 true_pos += 1
                 im_status = 'TP_'
-            elif GT_OBJECTS_IN_IMG - len(pcx_pos) > 0:
+            elif gt_objects_in_img - len(pcx_pos) > 0:
                 false_neg += 1
                 im_status = 'FN_'
-            elif (len(pcx_pos) - GT_OBJECTS_IN_IMG > 0) \
-                    or (GT_OBJECTS_IN_IMG == 0 and len(pcx_pos) != 0):
+            elif (len(pcx_pos) - gt_objects_in_img > 0) \
+                    or (gt_objects_in_img == 0 and len(pcx_pos) != 0):
                 false_pos += 1
                 im_status = 'FP_'
             for it1, it2 in zip(range(len(pcx_pos)),
-                                range(GT_OBJECTS_IN_IMG)):
+                                range(gt_objects_in_img)):
                 pred_bbx = {
                         "centre_x": pcx_pos[p_order[it1]],
                         "centre_y": pcy_pos[p_order[it1]]
@@ -132,21 +132,21 @@ def main():
                 #  return true if objects are within proximity
                 PTS_CLOSE = pts_near(gt_bbx, pred_bbx, rad=5)
                 status_img.append(PTS_CLOSE)
-                if PTS_CLOSE and GT_OBJECTS_IN_IMG == len(pcx_pos):
+                if PTS_CLOSE and gt_objects_in_img == len(pcx_pos):
                     true_pos += 1
-                    if sum(status_img) == GT_OBJECTS_IN_IMG:
+                    if sum(status_img) == gt_objects_in_img:
                         im_status = 'TP_'
                     else:
                         false_neg += 1
                         im_status = 'FN_'
-                elif not(PTS_CLOSE) and len(pcx_pos) > GT_OBJECTS_IN_IMG:
+                elif not(PTS_CLOSE) and len(pcx_pos) > gt_objects_in_img:
                     false_pos += 1
                     im_status = 'FP_'
 
-        elif GT_OBJECTS_IN_IMG == 0 and len(pcx_pos) == 0:
+        elif gt_objects_in_img == 0 and len(pcx_pos) == 0:
             im_status = 'TN_'
 
-        elif GT_OBJECTS_IN_IMG - len(pcx_pos) > 0 and len(pcx_pos) == 0:
+        elif gt_objects_in_img - len(pcx_pos) > 0 and len(pcx_pos) == 0:
             false_neg += 1
             im_status = 'FN_'
 
