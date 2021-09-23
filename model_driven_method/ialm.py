@@ -3,32 +3,41 @@ Inexact augmented Lagrange multiplier (IALM)
 """
 
 import numpy as np
-from numpy import linalg
+from numpy import linalg, ndarray
 
 from md_utils import shrinking
 
 
-def jay_func(y_mat, lambd):
+def jay_func(y_mat, lambd: int):
+
     """
     implements
         J(D) = max(norm_{2}(D), lambda^(-1)*norm_{inf}(D))
+    
+    Args:
+        y_mat (TYPE): Description
+        lambd (int): lambda
+    
+    Returns:
+        TYPE: Description
     """
-    return max(linalg.norm(y_mat, 2), np.dot(np.reciprocal(lambd), linalg.norm(y_mat, np.inf)))
+    return max(linalg.norm(y_mat, 2), np.dot(np.reciprocal(lambd),
+                                             linalg.norm(y_mat, np.inf)))
 
 
-def rpca_ialm(data_mat, lmbda, max_iter, tol):
+def rpca_ialm(data_mat, lmbda: int, max_iter: int, tol: float) -> ndarray:
+
     """
-    Required input:
-        D       - (m x n) data matrix
-        lambda  - weight of sparse error
-
-    Adjustable parameters:
-        tol         - tolerance for stopping criterion (DEFAULT=1e-2)
-        max_iter    - maximum number of iterations (DEFAULT=1000)
-
-    Return:
-        s_hat - estimate of S
+    Args:
+        data_mat (TYPE): (m x n) data matrix
+        lmbda (int): weight of sparse error
+        max_iter (int): maximum number of iterations (DEFAULT=1000)
+        tol (float): tolerance for stopping criterion (DEFAULT=1e-2)
+    
+    Returns:
+        ndarray: Description
     """
+
 
     d_norm = linalg.norm(data_mat)
     l_k = np.zeros(data_mat.shape)
@@ -38,7 +47,6 @@ def rpca_ialm(data_mat, lmbda, max_iter, tol):
     mu_bar = mu_k*1e7
     rho = 1.6
 
-    #  Solving RPCA-PCP via IALM
     converged = k = 0
     while converged == 0:
         U, sigm, v = linalg.svd(data_mat-s_k+np.reciprocal(mu_k)*y_k,

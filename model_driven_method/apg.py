@@ -11,19 +11,20 @@ from md_utils import shrinking
 
 
 def rpca_apg(
-        data_mat, lmbda,
-        max_iter, tol):
+        data_mat, 
+        lmbda: int,
+        max_iter: int, 
+        tol: float) -> np.ndarray:
+
     """
-    Required input:
-        D       - (m x n) data matrix
-        lambda  - weight of sparse error
-
-    Adjustable parameters:
-        tol         - tolerance for stopping criterion (DEFAULT=1e-6)
-        max_iter    - maximum number of iterations (DEFAULT=1000)
-
-    Return:
-        s_hat - estimate of S
+    Args:
+        data_mat (TYPE): (m x n) data matrix
+        lmbda (int): weight of sparse error
+        max_iter (int): maximum number of iterations (DEFAULT=1000)
+        tol (float): tolerance for stopping criterion (DEFAULT=1e-6)
+    
+    Returns:
+        np.ndarray: Description
     """
     U_i, sigm_i, v_i = linalg.svd(
                                 data_mat,
@@ -37,7 +38,6 @@ def rpca_apg(
     mu_bar = 0.05*sigm_i[3]
     eta = 0.99
 
-    # Solving RPCA-PCP via APG
     converged = k = 0
     while converged == 0:
         y_k_l = l_k+((t_m1-1)/t_k)*(l_k-l_m1)

@@ -24,20 +24,17 @@ optional arguments:
 # python generate_tfrecord.py -x .../images/train/
 #       -l .../data/label_map.pbtxt -o .../data/train.record
 
-# Update: 06-06-21
 
-
-
-
-import os
+import argparse
 import glob
 import io
+import os
 import xml.etree.ElementTree as ET
-import argparse
 from collections import namedtuple
-from PIL import Image
-from object_detection.utils import dataset_util, label_map_util
+
 import pandas as pd
+from object_detection.utils import dataset_util, label_map_util
+from PIL import Image
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 import tensorflow.compat.v1 as tf
@@ -45,23 +42,18 @@ import tensorflow.compat.v1 as tf
 # Initiate argument parser
 parser = argparse.ArgumentParser(
     description="Sample TensorFlow XML-to-TFRecord converter")
-parser.add_argument("-x",
-                    "--xml_dir",
+parser.add_argument("-x", "--xml_dir",
                     help="Path to the folder where the input .xml files are stored.",
                     type=str)
-parser.add_argument("-l",
-                    "--labels_path",
+parser.add_argument("-l", "--labels_path",
                     help="Path to the labels (.pbtxt) file.", type=str)
-parser.add_argument("-o",
-                    "--output_path",
+parser.add_argument("-o", "--output_path",
                     help="Path of output TFRecord (.record) file.", type=str)
-parser.add_argument("-i",
-                    "--image_dir",
+parser.add_argument("-i", "--image_dir",
                     help="Path to the folder where the input image files are stored. "
                          "Defaults to the same directory as XML_DIR.",
                     type=str, default=None)
-parser.add_argument("-c",
-                    "--csv_path",
+parser.add_argument("-c", "--csv_path",
                     help="Path of output .csv file. If none provided, then no file will be "
                          "written.",
                     type=str, default=None)

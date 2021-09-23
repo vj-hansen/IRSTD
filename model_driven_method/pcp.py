@@ -4,7 +4,6 @@ Principal Component Pursuit (PCP)
 
 Based on:
     https://github.com/dfm/pcp, Daniel Foreman-Mackey, 2015, MIT license.
-    https://github.com/dfm/pcp/blob/main/pcp.py
 """
 
 import numpy as np
@@ -15,12 +14,30 @@ from md_utils import mat2gray, sliding_window
 
 
 def pcp_func(
-        o_image, im_shape, max_iter=500,
-        tol=1e-2, method='ialm',
-        sw_step_size=10, sw_ptch_sz=50):
+        o_image,
+        im_shape,
+        max_iter=500,
+        tol: float = 1e-2,
+        method='ialm',
+        sw_step_size: int = 10,
+        sw_ptch_sz: int = 50) -> np.ndarray:
     '''
-        Principal Component Pursuit
+    Principal Component Pursuit
+
+    Args:
+        o_image (TYPE): Description
+        im_shape (TYPE): Description
+        max_iter (int, optional): Description
+        tol (float, optional): Description
+        method (str, optional): Description
+        sw_step_size (int, optional): Description
+        sw_ptch_sz (int, optional): Description
+
+    Returns:
+        np.ndarray: Description
+
     '''
+
     m, n = im_shape
     wndw_sz = sw_ptch_sz
     step_sz = sw_step_size
@@ -60,5 +77,6 @@ def pcp_func(
         for j in range(0, n):
             if int(y[i, j]) > 0:
                 s_ret[i, j] = np.median(trgt_patch[i, j, 0:int(y[i, j])])
-                # s_ret[i, j] = np.percentile(x, 10) # 10th percentile: alternative to median
+                # s_ret[i, j] = np.percentile(x, 10)
+                # 10th percentile: alternative to median
     return s_ret

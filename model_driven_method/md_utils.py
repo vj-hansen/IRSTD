@@ -4,6 +4,7 @@ Utilities used for model-driven method.
 """
 
 import math
+from typing import Any
 import xml.etree.ElementTree as ET
 
 import cv2
@@ -12,15 +13,31 @@ import pandas as pd
 import PIL
 
 
-def shrinking(mat_in, epsilon):
-    """ Soft-thresholding (shrinkage) operator: S_epsilon[x] """
+def shrinking(mat_in, epsilon: int):
+    """Soft-thresholding (shrinkage) operator: S_epsilon[x]
+
+    Args:
+        mat_in (TYPE): Description
+        epsilon (int): Description
+
+    Returns:
+        TYPE: Description
+    """
+
     sgn = np.sign(mat_in)  # sign returns -1 if x < 0, 0 if x==0, 1 if x > 0
     return np.multiply(sgn, np.maximum(np.abs(mat_in)-epsilon, 0))
 
 
 def mat2gray(mat):
     """
-        Matrix to grayscale img
+    Matrix to grayscale img
+
+    Args:
+        mat (TYPE): Description
+
+    Returns:
+        TYPE: grayscale image
+
     """
     mat = (np.asmatrix(mat))
     m_min = np.min(mat)
@@ -39,19 +56,23 @@ def mat2gray(mat):
 
 
 def sliding_window(
-        img_1, wndw_sz,
-        step_sz, m, n):
+        img_1, 
+        wndw_sz: int,
+        step_sz: int, 
+        m: int, 
+        n: int) -> np.ndarray:
     """
-    Sliding window
-    --------------
-    Input:
-        img_1: input image
-        wndw_sz: size of sliding window
-        step_sz: step size
-        m, n: image shape
-    --------------
-    Return:
-        image patch [2500 x ]
+    Sliding window:
+
+    Args:
+        img_1 (TYPE): input image
+        wndw_sz (int): size of sliding window
+        step_sz (int): step size
+        m (int): image shape
+        n (int): image shape
+
+    Returns:
+        np.ndarray: image patch [2500 x ]
     """
     img = np.array(img_1)
     og_img = []
@@ -64,8 +85,15 @@ def sliding_window(
     return og_img
 
 
-def image_to_mat(o_img):
-    ''' Image to matrix '''
+def image_to_mat(o_img) -> tuple[np.ndarray, any]:
+    """Image to matrix
+
+    Args:
+        o_img (Image): The original image
+
+    Returns:
+        tuple[np.ndarray, any]: Matrix
+    """
     mat = []
     shape = None
     img = PIL.Image.open(o_img).convert('L')
@@ -80,20 +108,29 @@ def image_to_mat(o_img):
 
 
 def rgb2gray(rgb):
-    """ RGB image to grayscale image """
+
+    """RGB image to grayscale image
+
+    Args:
+        rgb (Image): RGB Image
+
+    Returns:
+        image: Grayscale image
+    """
     return np.dot(rgb[..., :3], [0.2989, 0.5870, 0.1140])
 
 
-def read_xml(path, in_file):
-    """ Iterates through all .xml files in a given directory and combines
+def read_xml(path: str, in_file) -> np.ndarray:
+    """
+    Iterates through all .xml files in a given directory and combines
     them in a single Pandas dataframe.
 
-    Parameters:
-    ----------
-    path : str
-        The path containing the .xml files
+    Args:
+        path (str): Description
+        in_file (TYPE): Description
+
     Returns:
-        Numpy array
+        np.ndarray: Description
     """
     xml_list = []
     full_path = path+in_file+'.xml'
@@ -119,25 +156,23 @@ def read_xml(path, in_file):
     return xml_np
 
 
-def pts_near(gt_bbx, pred_bbx, rad):
+def pts_near(gt_bbx, pred_bbx, rad: int) -> bool:
+
     """
     Determine if two points are within a radius.
 
-    Parameters
-    ----------
-    gt_bbx : dict
-            [centre_x, centre_y]
-    pred_bbx : dict
-            [centre_x, centre_y]
-    Returns
-    -------
-    True or False
+    Args:
+        gt_bbx (dict): [centre_x, centre_y]
+        pred_bbx (dict): [centre_x, centre_y]
+        rad (int): Description
+
+    Returns:
+        bool
     """
 
     # create a box region where anything outside
     # the box is not within the radius (rad).
-    if (
-            abs(gt_bbx['centre_x'] - pred_bbx['centre_x']) > rad or
+    if (abs(gt_bbx['centre_x'] - pred_bbx['centre_x']) > rad or
             abs(gt_bbx['centre_y'] - pred_bbx['centre_y']) > rad):
         pt_cls = False
 
@@ -148,7 +183,7 @@ def pts_near(gt_bbx, pred_bbx, rad):
     return pt_cls
 
 
-def get_target_loc(img_file, thresh, delta):
+def get_target_loc(img_file, thresh: int, delta: int) -> tuple[Any, list, list]:
     '''
     Find location of pixels which have a different
     value than the black background (0 = black, 255 = white).
@@ -156,7 +191,16 @@ def get_target_loc(img_file, thresh, delta):
     Find (x, y)-position for pixels above a threshold.
     The target will have pixel-values above 0, the brightest targets
         have a value close to 255
-     '''
+
+    Args:
+        img_file (TYPE): Description
+        thresh (int): Description
+        delta (int): Description
+
+    Returns:
+        tuple[Any, list, list]: Description
+
+    '''
     x_p_a = []
     y_p_a = []
     r_x_p_a = []

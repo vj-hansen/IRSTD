@@ -4,9 +4,9 @@
 """
 import os
 import random
+
 import cv2
 import numpy as np
-
 
 IMG_IDX = 1
 SRC_DIR = "../dataset/dataset_images/"

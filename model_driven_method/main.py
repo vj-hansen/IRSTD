@@ -50,7 +50,49 @@ SLIDEWIN_PATCH_SIZE = 80
 DELTA = 4
 
 
+def parseXML(gtObjectsInImg: int, drawCircleImg, readXMLfile) -> tuple[list, list]:
+    """
+    Args:
+        gtObjectsInImg (int): Groundthruth objects in image
+        drawCircleImg (TYPE): Description
+        readXMLfile (TYPE): XML file to read
+    
+    Returns:
+        tuple[list, list]: Description
+    """
+    gtcx_arr = []
+    gtcy_arr = []
+    if gtObjectsInImg != 0:
+        for iter1 in range(gtObjectsInImg):
+            ymin_xml = readXMLfile[iter1][2]
+            xmin_xml = readXMLfile[iter1][1]
+            ymax_xml = readXMLfile[iter1][4]
+            xmax_xml = readXMLfile[iter1][3]
+            cx_xml = int((xmax_xml + xmin_xml) // 2)
+            cy_xml = int((ymax_xml + ymin_xml) // 2)
+            cv2.circle(drawCircleImg, (cx_xml, cy_xml), 10, (0, 0, 255), 2)
+            gtcx_arr.append(cx_xml)
+            gtcy_arr.append(cy_xml)
+    return gtcx_arr, gtcy_arr
+
+
+def printData(avgTime: int, truePos: int, falsePos: int, falseNeg: int) -> None:
+    """
+    Args:
+        avgTime (int): Average time
+        truePos (int): True positive
+        falsePos (int): False positive
+        falseNeg (int): False negative
+    """
+    print("Avg. time per img.: %.2f s" % avgTime)
+    print("TP: ", truePos)
+    print("FP: ", falsePos)
+    print("FN: ", falseNeg)
+
+
 def main():
+    """Summary
+    """
     for _, file in enumerate(filelist):
         if file.split(".")[-1] == 'png':
             fullpath = TEST_DIR + file
@@ -65,45 +107,31 @@ def main():
         img = plt.imread('img.jpg')
         m, n = img.shape
         im_shape = (m, n)
-        start = time.time()
 
+        start = time.time()
         T = pcp_func(
                 img, im_shape, max_iter=MAX_IT_PARAM,
                 tol=TOL_PARAM, method=METHOD_PARAM,
                 sw_step_size=SLIDEWIN_STEP_SIZE,
                 sw_ptch_sz=SLIDEWIN_PATCH_SIZE)
-
         end = time.time()
         round_time = end-start
         TOTAL_TIME = TOTAL_TIME + round_time
         print("Total time: %.2f s" % round_time)
+
         TOTAL_GT_OBJ = gt_objects_in_img + TOTAL_GT_OBJ
 
         img_filename.append(file.split(".")[0])
         plt.imsave('t_img.jpg', T.reshape(im_shape), cmap='gray')
         final_str = str(gt_objects_in_img)+' object(s) in '+file
-        print(final_str)
-
         circ_img_rgb, pcx_pos, pcy_pos = get_target_loc('t_img.jpg',
                                                         thresh=THRESH_PARAM,
                                                         delta=DELTA)
         total_detc.append(pcx_pos)
-
-        gtcx_arr = []
-        gtcy_arr = []
+        gtcx_arr, gtcy_arr = parseXML(gt_objects_in_img,
+                                      circ_img_rgb,
+                                      read_xml_file)
         status_img = []
-        if gt_objects_in_img != 0:  # GT objects in image
-            for iter1 in range(gt_objects_in_img):
-                ymin_xml = read_xml_file[iter1][2]
-                xmin_xml = read_xml_file[iter1][1]
-                ymax_xml = read_xml_file[iter1][4]
-                xmax_xml = read_xml_file[iter1][3]
-                cx_xml = int((xmax_xml + xmin_xml) // 2)
-                cy_xml = int((ymax_xml + ymin_xml) // 2)
-                cv2.circle(circ_img_rgb, (cx_xml, cy_xml), 10, (0, 0, 255), 2)
-                gtcx_arr.append(cx_xml)
-                gtcy_arr.append(cy_xml)
-
         if len(pcx_pos) != 0:
             p_order = np.argsort(pcx_pos)
             gt_order = np.argsort(gtcx_arr)
@@ -143,10 +171,10 @@ def main():
                     false_pos += 1
                     im_status = 'FP_'
 
-        elif gt_objects_in_img == 0 and len(pcx_pos) == 0:
+        elif gt_objects_in_img == 0 and len(pcx_pos) == 0: # f_TN()
             im_status = 'TN_'
 
-        elif gt_objects_in_img - len(pcx_pos) > 0 and len(pcx_pos) == 0:
+        elif gt_objects_in_img - len(pcx_pos) > 0 and len(pcx_pos) == 0: # f_FN()
             false_neg += 1
             im_status = 'FN_'
 
@@ -154,10 +182,7 @@ def main():
                     + str(MAX_IT_PARAM)+'_'+str(THRESH_PARAM)+'_'
                     + file.split(".")[0]+'_target.jpg', circ_img_rgb)
     avg_time = TOTAL_TIME/(len(filelist))
-    print("Avg. time per img.: %.2f s" % avg_time)
-    print("TP: ", true_pos)
-    print("FP: ", false_pos)
-    print("FN: ", false_neg)
+    printData(avg_time, true_pos, false_pos, false_neg)
 
 
 if __name__ == '__main__':
