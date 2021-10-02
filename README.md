@@ -33,7 +33,15 @@
     * protobuf-compiler
     * python-lxml
     * python-pil
-    * run pip3 install -r requirements.txt
+    * numpy
     * tensorflow
     * tensorflow-gpu
+    * tensorboard    
+    * opencv-python
+    * matplotlib
+    * pandas
+    * tensorflow-datasets
+    * tf-slim
+    * Cython
+    * lvis
 
