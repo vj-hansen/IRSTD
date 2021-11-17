@@ -3,12 +3,11 @@ Load ONNX models in order to extract
 weights from the feature extractor.
 """
 
-import onnx
-import matplotlib.pyplot as plt
-from onnx import numpy_helper
-import numpy as np
 import cv2
-
+import matplotlib.pyplot as plt
+import numpy as np
+import onnx
+from onnx import numpy_helper
 
 images = []
 

@@ -21,26 +21,20 @@ optional arguments:
                         Path of output .csv file. If none provided, then no file will be written.
 """
 
-# python generate_tfrecord.py -x .../images/train/
-#       -l .../data/label_map.pbtxt -o .../data/train.record
 
-# Update: 06-06-21
-
-
-
-
-import os
+import tensorflow.compat.v1 as tf
+import argparse
 import glob
 import io
+import os
 import xml.etree.ElementTree as ET
-import argparse
 from collections import namedtuple
-from PIL import Image
-from object_detection.utils import dataset_util, label_map_util
+
 import pandas as pd
+from object_detection.utils import dataset_util, label_map_util
+from PIL import Image
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-import tensorflow.compat.v1 as tf
 
 # Initiate argument parser
 parser = argparse.ArgumentParser(
@@ -96,22 +90,22 @@ def xml_to_csv(path):
         for member in root.findall('object'):
             if len(member) == 7:
                 value = (root.find('filename').text,
-                        int(root.find('size')[0].text),
-                        int(root.find('size')[1].text),
-                        member[0].text,
-                        int(member[6][0].text),
-                        int(member[6][1].text),
-                        int(member[6][2].text),
-                        int(member[6][3].text))
+                         int(root.find('size')[0].text),
+                         int(root.find('size')[1].text),
+                         member[0].text,
+                         int(member[6][0].text),
+                         int(member[6][1].text),
+                         int(member[6][2].text),
+                         int(member[6][3].text))
             elif len(member) == 5:
                 value = (root.find('filename').text,
-                        int(root.find('size')[0].text),
-                        int(root.find('size')[1].text),
-                        member[0].text,
-                        int(member[4][0].text),
-                        int(member[4][1].text),
-                        int(member[4][2].text),
-                        int(member[4][3].text))
+                         int(root.find('size')[0].text),
+                         int(root.find('size')[1].text),
+                         member[0].text,
+                         int(member[4][0].text),
+                         int(member[4][1].text),
+                         int(member[4][2].text),
+                         int(member[4][3].text))
             xml_list.append(value)
     column_name = ['filename', 'width', 'height',
                    'class', 'xmin', 'ymin', 'xmax', 'ymax']
