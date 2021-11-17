@@ -13,14 +13,14 @@ from skimage import exposure, io
 
 image1 = io.imread("image.png")
 fd, hog_image = hog(image1,
-                    orientations=8,
-                    pixels_per_cell=(16, 16),
-                    cells_per_block=(1, 1),
-                    visualize=True,
-                    multichannel=True)
+                    orientations    = 8,
+                    pixels_per_cell = (16, 16),
+                    cells_per_block = (1, 1),
+                    visualize       = True,
+                    multichannel    = True)
 
 # Rescale histogram for better display
-hog_image_rescaled = exposure.rescale_intensity(hog_image, in_range=(0, 10))
+hog_image_rescaled = exposure.rescale_intensity(hog_image, in_range = (0, 10))
 
 
 plt.rcParams['figure.figsize'] = [10, 10]
@@ -36,4 +36,4 @@ axarr[1].imshow(hog_image_rescaled, cmap='gray')
 axarr[1].set_title('HOG')
 
 
-plt.imsave('hog_target.jpg', hog_image_rescaled, cmap='gray')
+plt.imsave('hog_target.jpg', hog_image_rescaled, cmap = 'gray')

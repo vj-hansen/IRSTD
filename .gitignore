@@ -113,11 +113,3 @@ dmypy.json
 
 #macOS
 .DS_Store
-
-*.py.orig
-*.coafile
-
-
-.pylintrc
-
-.vscode/

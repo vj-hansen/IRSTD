@@ -3,11 +3,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import cv2
 
-# img_dir = "../low_rank_sparse/lrsd_detection_pics/test_2/"
+#img_dir = "../low_rank_sparse/lrsd_detection_pics/test_2/"
 
 IMG_NAME = "10_percentile_FP_Misc_401_target"
 
-# img1 = cv2.imread(img_dir+IMG_NAME+'.jpg', 0)
+#img1 = cv2.imread(img_dir+IMG_NAME+'.jpg', 0)
 img1 = cv2.imread(IMG_NAME+'.jpg', 0)
 img1 = img1/255
 
@@ -16,7 +16,7 @@ img1 = img1/255
 xx, yy = np.mgrid[0:img1.shape[0], 0:img1.shape[1]]
 fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
 ax.plot_surface(xx, yy, img1, cmap='coolwarm',
-                linewidth=0, antialiased=False)
+                       linewidth=0, antialiased=False)
 
 ax.azim = 0
 ax.dist = 8

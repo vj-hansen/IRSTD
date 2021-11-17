@@ -24,17 +24,20 @@ optional arguments:
 # python generate_tfrecord.py -x .../images/train/
 #       -l .../data/label_map.pbtxt -o .../data/train.record
 
+# Update: 06-06-21
 
-import argparse
+
+
+
+import os
 import glob
 import io
-import os
 import xml.etree.ElementTree as ET
+import argparse
 from collections import namedtuple
-
-import pandas as pd
-from object_detection.utils import dataset_util, label_map_util
 from PIL import Image
+from object_detection.utils import dataset_util, label_map_util
+import pandas as pd
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 import tensorflow.compat.v1 as tf
@@ -42,18 +45,23 @@ import tensorflow.compat.v1 as tf
 # Initiate argument parser
 parser = argparse.ArgumentParser(
     description="Sample TensorFlow XML-to-TFRecord converter")
-parser.add_argument("-x", "--xml_dir",
+parser.add_argument("-x",
+                    "--xml_dir",
                     help="Path to the folder where the input .xml files are stored.",
                     type=str)
-parser.add_argument("-l", "--labels_path",
+parser.add_argument("-l",
+                    "--labels_path",
                     help="Path to the labels (.pbtxt) file.", type=str)
-parser.add_argument("-o", "--output_path",
+parser.add_argument("-o",
+                    "--output_path",
                     help="Path of output TFRecord (.record) file.", type=str)
-parser.add_argument("-i", "--image_dir",
+parser.add_argument("-i",
+                    "--image_dir",
                     help="Path to the folder where the input image files are stored. "
                          "Defaults to the same directory as XML_DIR.",
                     type=str, default=None)
-parser.add_argument("-c", "--csv_path",
+parser.add_argument("-c",
+                    "--csv_path",
                     help="Path of output .csv file. If none provided, then no file will be "
                          "written.",
                     type=str, default=None)
@@ -87,25 +95,23 @@ def xml_to_csv(path):
         root = tree.getroot()
         for member in root.findall('object'):
             if len(member) == 7:
-                value = (
-                    root.find('filename').text,
-                    int(root.find('size')[1].text),
-                    int(root.find('size')[0].text),
-                    member[0].text,
-                    int(member[6][0].text),
-                    int(member[6][1].text),
-                    int(member[6][2].text),
-                    int(member[6][3].text))
+                value = (root.find('filename').text,
+                        int(root.find('size')[0].text),
+                        int(root.find('size')[1].text),
+                        member[0].text,
+                        int(member[6][0].text),
+                        int(member[6][1].text),
+                        int(member[6][2].text),
+                        int(member[6][3].text))
             elif len(member) == 5:
-                value = (
-                    root.find('filename').text,
-                    int(root.find('size')[0].text),
-                    int(root.find('size')[1].text),
-                    member[0].text,
-                    int(member[4][0].text),
-                    int(member[4][1].text),
-                    int(member[4][2].text),
-                    int(member[4][3].text))
+                value = (root.find('filename').text,
+                        int(root.find('size')[0].text),
+                        int(root.find('size')[1].text),
+                        member[0].text,
+                        int(member[4][0].text),
+                        int(member[4][1].text),
+                        int(member[4][2].text),
+                        int(member[4][3].text))
             xml_list.append(value)
     column_name = ['filename', 'width', 'height',
                    'class', 'xmin', 'ymin', 'xmax', 'ymax']
