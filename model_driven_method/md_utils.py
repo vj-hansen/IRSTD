@@ -6,35 +6,35 @@ import math
 import xml.etree.ElementTree as ET
 
 import cv2
-import numpy as np
+import numpy
 import pandas as pd
 import PIL
 
 
 def shrinking(mat_in, epsilon):
     """Soft-thresholding (shrinkage) operator: S_epsilon[x]"""
-    sgn = np.sign(mat_in)  # sign returns -1 if x < 0, 0 if x==0, 1 if x > 0
-    return np.multiply(sgn, np.maximum(np.abs(mat_in) - epsilon, 0))
+    sgn = numpy.sign(mat_in)  # sign returns -1 if x < 0, 0 if x==0, 1 if x > 0
+    return numpy.multiply(sgn, numpy.maximum(numpy.abs(mat_in) - epsilon, 0))
 
 
 def mat2gray(m):
     """
-    Matrix to grayscale img
+    Matrix to grayscale image
     """
-    m = np.asmatrix(m)
-    m_min = np.min(m)
-    m_max = np.max(m)
-    img = np.zeros(np.shape(m))
+    m = numpy.asmatrix(m)
+    m_min = numpy.min(m)
+    m_max = numpy.max(m)
+    img = numpy.zeros(numpy.shape(m))
     divisor_mat = float(m_max - m_min) * (m - m_min)
-    if np.max(divisor_mat) > 0:
-        img = np.add(
+    if numpy.max(divisor_mat) > 0:
+        img = numpy.add(
             img,
-            np.multiply(
-                np.logical_and(np.greater_equal(m, m_min), np.less(m, m_max)),
+            numpy.multiply(
+                numpy.logical_and(numpy.greater_equal(m, m_min), numpy.less(m, m_max)),
                 (1 / float(m_max - m_min) * (m - m_min)),
             ),
         )
-    img = np.add(img, (np.greater_equal(m, m_max)))
+    img = numpy.add(img, (numpy.greater_equal(m, m_max)))
     return img
 
 
@@ -51,14 +51,13 @@ def sliding_window(img_1, wndw_sz, step_sz, m, n):
     Return:
         image patch [2500 x ]
     """
-    img = np.array(img_1)
-    org_img = []  # empty array
+    img = numpy.array(img_1)
+    org_img = []
     for i in range(0, m - wndw_sz + 1, step_sz):
         for j in range(0, n - wndw_sz + 1, step_sz):
             temp = img[i : i + wndw_sz, j : j + wndw_sz]
-            # order='F' is Fortran-style
-            org_img = np.append(org_img, [temp.flatten("F")])
-    org_img = np.reshape(
+            org_img = numpy.append(org_img, [temp.flatten("F")])
+    org_img = numpy.reshape(
         org_img, (wndw_sz * wndw_sz, org_img.size // (wndw_sz * wndw_sz)), order="F"
     )
     return org_img
@@ -76,12 +75,12 @@ def image_to_mat(o_img):
         # containing pixel values. The sequence object is flattened,
         # so that values for line 1 follow directly after the values of line 0
         mat.append(pix)
-    return np.array(mat), shape[::-1]
+    return numpy.array(mat), shape[::-1]
 
 
 def rgb2gray(rgb):
     """RGB image to grayscale image"""
-    return np.dot(rgb[..., :3], [0.2989, 0.5870, 0.1140])
+    return numpy.dot(rgb[..., :3], [0.2989, 0.5870, 0.1140])
 
 
 def read_xml(path, in_file):
@@ -124,7 +123,7 @@ def read_xml(path, in_file):
     return xml_np
 
 
-def pts_near(gt_bbx, pred_bbx, rad):  # change name
+def pts_near(gt_bbx, pred_bbx, rad):
     """
     Determine if two points are within a radius.
 
@@ -176,7 +175,7 @@ def get_target_loc(img_file, thresh, delta):
 
     img = cv2.imread(img_file, 0)
     circ_img_rgb = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
-    y_v, x_v = np.where(img > thresh)
+    y_v, x_v = numpy.where(img > thresh)
 
     if len(x_v) == 0 or len(y_v) == 0:
         circ_img = circ_img_rgb
@@ -191,7 +190,7 @@ def get_target_loc(img_file, thresh, delta):
             if i == 0:
                 circ_img = cv2.circle(circ_img_rgb, (x, y), radius, (0, 255, 0), 2)
         else:
-            diff_x = abs(x_p_a[i] - x_p_a[i - 1])  # e.g. x[1] - x[0]
+            diff_x = abs(x_p_a[i] - x_p_a[i - 1])
             diff_y = abs(y_p_a[i] - y_p_a[i - 1])
             # the placement of [x(i), y(i)] and [x(i-1), y(i-1)] must be
             # different by at least delta pixels

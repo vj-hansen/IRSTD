@@ -14,7 +14,7 @@ import time
 
 import cv2
 import numpy as np
-from matplotlib import pyplot as plt
+from matplotlib import pyplot
 from PIL import Image
 
 from md_utils import get_target_loc, pts_near, read_xml
@@ -22,7 +22,6 @@ from pcp import pcp_func
 
 cwd = os.getcwd()
 TEST_DIR = cwd + "/model_driven_method/test_imgs/"
-# TEST_DIR   = "../dataset/dataset_images/target_test/"
 img_dir = os.listdir(TEST_DIR)
 SAVE_DIR = "model_driven_method/detection_pics/"
 
@@ -59,7 +58,7 @@ for it, file in enumerate(filelist):
         else:
             GT_OBJECTS_IN_IMG = 0
 
-    img = plt.imread("img.jpg")
+    img = pyplot.imread("img.jpg")
     m, n = img.shape
     im_shape = (m, n)
     start = time.time()
@@ -81,8 +80,8 @@ for it, file in enumerate(filelist):
     TOTAL_GT_OBJ = GT_OBJECTS_IN_IMG + TOTAL_GT_OBJ
 
     img_filename.append(file.split(".")[0])
-    plt.imsave("t_img.jpg", T.reshape(im_shape), cmap="gray")
-    print(str(GT_OBJECTS_IN_IMG) + " object(s) in " + file)
+    pyplot.imsave("t_img.jpg", T.reshape(im_shape), cmap="gray")
+    print(f"{str(GT_OBJECTS_IN_IMG)} object(s) in {file}")
 
     circ_img_rgb, pcx_pos, pcy_pos = get_target_loc(
         "t_img.jpg", thresh=THRESH_PARAM, delta=DELTA
@@ -92,7 +91,7 @@ for it, file in enumerate(filelist):
     gtcx_arr = []
     gtcy_arr = []
     status_img = []
-    if GT_OBJECTS_IN_IMG != 0:  # GT objects in image
+    if GT_OBJECTS_IN_IMG != 0:
         for iter1 in range(GT_OBJECTS_IN_IMG):
             ymin_xml = read_xml_file[iter1][2]
             xmin_xml = read_xml_file[iter1][1]

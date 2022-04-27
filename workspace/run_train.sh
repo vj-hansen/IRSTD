@@ -1,4 +1,3 @@
-# update: 02.04.21, VJH
 MODEL=$1
 
 rm -rf /home/paperspace/$MODEL/c* && \

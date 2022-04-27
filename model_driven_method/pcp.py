@@ -58,7 +58,6 @@ def pcp_func(
             for u in range(i, i + wndw_sz - 1):
                 for v in range(j, j + wndw_sz - 1):
                     trgt_patch[u, v, int(y[u, v])] = temp1[u - i + 1, v - j + 1]
-    # median from IPI paper
     for i in range(0, m):
         for j in range(0, n):
             if int(y[i, j]) > 0:

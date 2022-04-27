@@ -2,7 +2,7 @@
 Inexact augmented Lagrange multiplier (IALM)
 """
 
-import numpy as np
+import numpy
 from numpy import linalg
 
 from md_utils import shrinking
@@ -14,7 +14,7 @@ def jay_func(y_mat, lambd):
         J(D) = max(norm_{2}(D), lambda^(-1)*norm_{inf}(D))
     """
     return max(
-        linalg.norm(y_mat, 2), np.dot(np.reciprocal(lambd), linalg.norm(y_mat, np.inf))
+        linalg.norm(y_mat, 2), numpy.dot(numpy.reciprocal(lambd), linalg.norm(y_mat, numpy.inf))
     )
 
 
@@ -33,8 +33,8 @@ def rpca_ialm(data_mat, lmbda, max_iter, tol):
     """
 
     d_norm = linalg.norm(data_mat)
-    l_k = np.zeros(data_mat.shape)
-    s_k = np.zeros(data_mat.shape)
+    l_k = numpy.zeros(data_mat.shape)
+    s_k = numpy.zeros(data_mat.shape)
     y_k = data_mat / jay_func(data_mat, lmbda)
     mu_k = 1.25 / linalg.norm(data_mat, 2)
     mu_bar = mu_k * 1e7
@@ -44,13 +44,13 @@ def rpca_ialm(data_mat, lmbda, max_iter, tol):
     converged = k = 0
     while converged == 0:
         U, sigm, v = linalg.svd(
-            data_mat - s_k + np.reciprocal(mu_k) * y_k, full_matrices=False
+            data_mat - s_k + numpy.reciprocal(mu_k) * y_k, full_matrices=False
         )  # economy SVD
-        sigm = np.diag(sigm)
-        l_kp1 = np.dot(U, shrinking(sigm, np.reciprocal(mu_k)))
-        l_kp1 = np.dot(l_kp1, v)
-        shr = data_mat - l_kp1 + np.dot(np.reciprocal(mu_k), y_k)
-        s_kp1 = shrinking(shr, lmbda * np.reciprocal(mu_k))
+        sigm = numpy.diag(sigm)
+        l_kp1 = numpy.dot(U, shrinking(sigm, numpy.reciprocal(mu_k)))
+        l_kp1 = numpy.dot(l_kp1, v)
+        shr = data_mat - l_kp1 + numpy.dot(numpy.reciprocal(mu_k), y_k)
+        s_kp1 = shrinking(shr, lmbda * numpy.reciprocal(mu_k))
         mu_k = min(mu_k * rho, mu_bar)
         k = k + 1
         l_k = l_kp1

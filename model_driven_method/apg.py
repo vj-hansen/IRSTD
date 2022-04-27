@@ -4,7 +4,7 @@ Accelerated Proximal Gradient (APG)
 
 from math import sqrt
 
-import numpy as np
+import numpy
 from numpy import linalg
 
 from md_utils import shrinking
@@ -25,8 +25,8 @@ def rpca_apg(data_mat, lmbda, max_iter, tol):
     """
     U_i, sigm_i, v_i = linalg.svd(data_mat, full_matrices=False)
 
-    l_k = l_m1 = np.zeros(data_mat.shape)
-    s_k = s_m1 = np.zeros(data_mat.shape)
+    l_k = l_m1 = numpy.zeros(data_mat.shape)
+    s_k = s_m1 = numpy.zeros(data_mat.shape)
     t_k = t_m1 = 1
 
     mu_k = sigm_i[1]
@@ -40,11 +40,11 @@ def rpca_apg(data_mat, lmbda, max_iter, tol):
         y_k_s = s_k + ((t_m1 - 1) / t_k) * (s_k - s_m1)
         g_k_l = y_k_l - (1 / 2) * (y_k_l + y_k_s - data_mat)
         U, sigm, v = linalg.svd(g_k_l, full_matrices=False)
-        sigm = np.diag(sigm)
-        l_kp1 = np.dot(U, shrinking(sigm, mu_k / 2))
-        l_kp1 = np.dot(l_kp1, v)
+        sigm = numpy.diag(sigm)
+        l_kp1 = numpy.dot(U, shrinking(sigm, mu_k / 2))
+        l_kp1 = numpy.dot(l_kp1, v)
         g_k_s = y_k_s - (1 / 2) * (y_k_l + y_k_s - data_mat)
-        g_k_s = np.squeeze(np.asarray(g_k_s))
+        g_k_s = numpy.squeeze(numpy.asarray(g_k_s))
         s_kp1 = shrinking(g_k_s, lmbda * mu_k / 2)
         t_kp1 = 0.5 * (1 + sqrt(1 + 4 * t_k * t_k))
         temp = l_kp1 + s_kp1 - y_k_l - y_k_s
