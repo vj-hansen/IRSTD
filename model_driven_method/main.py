@@ -21,15 +21,15 @@ from md_utils import get_target_loc, pts_near, read_xml
 from pcp import pcp_func
 
 cwd = os.getcwd()
-TEST_DIR = cwd+"/model_driven_method/test_imgs/"
-#TEST_DIR   = "../dataset/dataset_images/target_test/"
+TEST_DIR = cwd + "/model_driven_method/test_imgs/"
+# TEST_DIR   = "../dataset/dataset_images/target_test/"
 img_dir = os.listdir(TEST_DIR)
-SAVE_DIR = 'model_driven_method/detection_pics/'
+SAVE_DIR = "model_driven_method/detection_pics/"
 
 if not os.path.exists(SAVE_DIR):
     os.makedirs(SAVE_DIR)
 
-filelist = [file for file in img_dir if file.endswith('.png')]
+filelist = [file for file in img_dir if file.endswith(".png")]
 TOTAL_TIME = 0
 TRUE_POS = 0
 FALSE_POS = 0
@@ -42,24 +42,24 @@ total_detc = []
 
 MAX_IT_PARAM = 500
 TOL_PARAM = 1e-2
-METHOD_PARAM = 'ialm'  # or apg
+METHOD_PARAM = "ialm"  # or apg
 THRESH_PARAM = 150
 SLIDEWIN_STEP_SIZE = 20
 SLIDEWIN_PATCH_SIZE = 80
 DELTA = 4
 
 for it, file in enumerate(filelist):
-    if file.split(".")[-1] == 'png':
+    if file.split(".")[-1] == "png":
         fullpath = TEST_DIR + file
         tmp_img = Image.open(fullpath).convert("L")
-        tmp_img.save('img.jpg')
+        tmp_img.save("img.jpg")
         if os.path.isfile(fullpath):
             read_xml_file = read_xml(TEST_DIR, file.split(".")[0])
             GT_OBJECTS_IN_IMG = len(read_xml_file)
         else:
             GT_OBJECTS_IN_IMG = 0
 
-    img = plt.imread('img.jpg')
+    img = plt.imread("img.jpg")
     m, n = img.shape
     im_shape = (m, n)
     start = time.time()
@@ -71,21 +71,22 @@ for it, file in enumerate(filelist):
         tol=TOL_PARAM,
         method=METHOD_PARAM,
         sw_step_size=SLIDEWIN_STEP_SIZE,
-        sw_ptch_sz=SLIDEWIN_PATCH_SIZE)
+        sw_ptch_sz=SLIDEWIN_PATCH_SIZE,
+    )
 
     end = time.time()
-    round_time = end-start
+    round_time = end - start
     TOTAL_TIME = TOTAL_TIME + round_time
     print("Total time: %.2f s" % round_time)
     TOTAL_GT_OBJ = GT_OBJECTS_IN_IMG + TOTAL_GT_OBJ
 
     img_filename.append(file.split(".")[0])
-    plt.imsave('t_img.jpg', T.reshape(im_shape), cmap='gray')
-    print(str(GT_OBJECTS_IN_IMG) + ' object(s) in ' + file)
+    plt.imsave("t_img.jpg", T.reshape(im_shape), cmap="gray")
+    print(str(GT_OBJECTS_IN_IMG) + " object(s) in " + file)
 
-    circ_img_rgb, pcx_pos, pcy_pos = get_target_loc('t_img.jpg',
-                                                    thresh=THRESH_PARAM,
-                                                    delta=DELTA)
+    circ_img_rgb, pcx_pos, pcy_pos = get_target_loc(
+        "t_img.jpg", thresh=THRESH_PARAM, delta=DELTA
+    )
     total_detc.append(pcx_pos)
 
     gtcx_arr = []
@@ -108,24 +109,24 @@ for it, file in enumerate(filelist):
         gt_order = np.argsort(gtcx_arr)
         if GT_OBJECTS_IN_IMG == len(pcx_pos):
             TRUE_POS += 1
-            IM_STATUS = 'TP_'
+            IM_STATUS = "TP_"
         elif GT_OBJECTS_IN_IMG - len(pcx_pos) > 0:
             FALSE_NEG += 1
-            IM_STATUS = 'FN_'
-        elif (len(pcx_pos) - GT_OBJECTS_IN_IMG > 0) or \
-                (GT_OBJECTS_IN_IMG == 0 and len(pcx_pos) != 0):
+            IM_STATUS = "FN_"
+        elif (len(pcx_pos) - GT_OBJECTS_IN_IMG > 0) or (
+            GT_OBJECTS_IN_IMG == 0 and len(pcx_pos) != 0
+        ):
             FALSE_POS += 1
-            IM_STATUS = 'FP_'
-        for it1, it2 in zip(range(len(pcx_pos)),
-                            range(GT_OBJECTS_IN_IMG)):
+            IM_STATUS = "FP_"
+        for it1, it2 in zip(range(len(pcx_pos)), range(GT_OBJECTS_IN_IMG)):
             pred_bbx = {
                 "centre_x": pcx_pos[p_order[it1]],
-                "centre_y": pcy_pos[p_order[it1]]
+                "centre_y": pcy_pos[p_order[it1]],
             }
 
             gt_bbx = {
                 "centre_x": gtcx_arr[gt_order[it2]],
-                "centre_y": gtcy_arr[gt_order[it2]]
+                "centre_y": gtcy_arr[gt_order[it2]],
             }
 
             # return true if objects are within proximity
@@ -135,26 +136,40 @@ for it, file in enumerate(filelist):
                 TRUE_POS += 1
                 if sum(status_img) == GT_OBJECTS_IN_IMG:
                     # only if num(TRUE_POS) for this file == num(gt_obj_in_img)
-                    IM_STATUS = 'TP_'
+                    IM_STATUS = "TP_"
                 else:
                     FALSE_NEG += 1
-                    IM_STATUS = 'FN_'
-            elif not(PTS_CLOSE) and len(pcx_pos) > GT_OBJECTS_IN_IMG:
+                    IM_STATUS = "FN_"
+            elif not (PTS_CLOSE) and len(pcx_pos) > GT_OBJECTS_IN_IMG:
                 FALSE_POS += 1
                 # only if num(False_POS) > num(gt_obj_in_img)
-                IM_STATUS = 'FP_'
+                IM_STATUS = "FP_"
 
     elif GT_OBJECTS_IN_IMG == 0 and len(pcx_pos) == 0:
-        IM_STATUS = 'TN_'
+        IM_STATUS = "TN_"
 
     elif GT_OBJECTS_IN_IMG - len(pcx_pos) > 0 and len(pcx_pos) == 0:
         FALSE_NEG += 1
-        IM_STATUS = 'FN_'
+        IM_STATUS = "FN_"
 
-    cv2.imwrite(SAVE_DIR+IM_STATUS+'_'+METHOD_PARAM+'_'+str(TOL_PARAM)+'_'+str(MAX_IT_PARAM) +
-                '_'+str(THRESH_PARAM)+'_'+file.split(".")[0]+'_target.jpg', circ_img_rgb)
+    cv2.imwrite(
+        SAVE_DIR
+        + IM_STATUS
+        + "_"
+        + METHOD_PARAM
+        + "_"
+        + str(TOL_PARAM)
+        + "_"
+        + str(MAX_IT_PARAM)
+        + "_"
+        + str(THRESH_PARAM)
+        + "_"
+        + file.split(".")[0]
+        + "_target.jpg",
+        circ_img_rgb,
+    )
 
-avg_time = TOTAL_TIME/(len(filelist))
+avg_time = TOTAL_TIME / (len(filelist))
 print("Avg. time per img.: %.2f s" % avg_time)
 print("TP: ", TRUE_POS)
 print("FP: ", FALSE_POS)
