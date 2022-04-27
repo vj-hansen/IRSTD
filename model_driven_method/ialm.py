@@ -14,7 +14,8 @@ def jay_func(y_mat, lambd):
         J(D) = max(norm_{2}(D), lambda^(-1)*norm_{inf}(D))
     """
     return max(
-        linalg.norm(y_mat, 2), numpy.dot(numpy.reciprocal(lambd), linalg.norm(y_mat, numpy.inf))
+        linalg.norm(y_mat, 2),
+        numpy.dot(numpy.reciprocal(lambd), linalg.norm(y_mat, numpy.inf)),
     )
 
 

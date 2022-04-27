@@ -15,6 +15,7 @@ input_image = load_image("Misc_283.png")
 MODEL_STR = "DD-v2.onnx"
 model = onnx.load(MODEL_STR)
 
+
 def load_image(image_path):
     """
     Load the image used to add the extracted weights onto
@@ -22,8 +23,6 @@ def load_image(image_path):
     coloured_image = cv2.imread(image_path)
     grey_image = cv2.cvtColor(coloured_image, cv2.COLOR_BGR2GRAY)
     return grey_image
-
-
 
 
 def convolve2d(image, kernel):
@@ -43,7 +42,6 @@ def convolve2d(image, kernel):
             # element-wise multiplication of the kernel and the image
             output[y, x] = (kernel * image_padded[y : y + 3, x : x + 3]).sum()
     return output
-
 
 
 W_PATH_ALL = (
