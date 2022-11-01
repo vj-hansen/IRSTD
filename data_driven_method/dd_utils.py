@@ -14,7 +14,7 @@ def save_image(
         image, top_left_crner, btm_right_crner, color=(0, 0, 255), thickness=1
     )
     cv2.imwrite(
-        "/Users/victor/Google Drive/detection_pics/"
+        "../detection_pics/"
         + model
         + "_"
         + str(score_thresh)

@@ -10,7 +10,6 @@ import onnx
 from onnx import numpy_helper
 
 images = []
-input_image = load_image("Misc_283.png")
 
 MODEL_STR = "DD-v2.onnx"
 model = onnx.load(MODEL_STR)
@@ -43,6 +42,8 @@ def convolve2d(image, kernel):
             output[y, x] = (kernel * image_padded[y : y + 3, x : x + 3]).sum()
     return output
 
+
+input_image = load_image("Misc_283.png")
 
 W_PATH_ALL = (
     "StatefulPartitionedCall/center_net_resnet_v1fpn_feature_extractor/model_1/model/"
@@ -85,9 +86,6 @@ axs[1, 0].imshow(images[2], cmap="Greys")
 axs[1, 0].set_axis_off()
 axs[1, 1].imshow(images[3], cmap="Greys")
 axs[1, 1].set_axis_off()
-
-
 plt.tight_layout()
-
 plt.savefig(f"my_figs/{MODEL_STR}{str(i)}_wght.pdf")
 plt.show()
