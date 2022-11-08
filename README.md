@@ -11,7 +11,7 @@
   <em>CenterNet + ResNet50 FPN</em>
 </p>
 <p align="center">
-  <img width="265" height="165" src="../main/data_driven_method/images/my_modified_resnet_04_04_0.3tp_Misc_320.jpg">
+  <img width="265" height="165" src="../legacy/data_driven_method/images/my_modified_resnet_04_04_0.3tp_Misc_320.jpg">
 </p>
 
 ---
@@ -20,5 +20,5 @@
   <em>RPCA-PCP via IALM</em>
 </p>
 <p align="center">
-  <img width="265" height="165" src="../main/data_driven_method/images/FN__ialm_0.01_1000_150_Misc_320_target.jpg">
+  <img width="265" height="165" src="../legacy/data_driven_method/images/FN__ialm_0.01_1000_150_Misc_320_target.jpg">
 </p>
