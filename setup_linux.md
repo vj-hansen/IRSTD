@@ -7,4 +7,3 @@
 
 ### Install Python packages
 - `pip install -r requirements.txt`
-- `pip install --user --upgrade tensorflow tensorflow-gpu`
