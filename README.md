@@ -6,10 +6,9 @@
 ---
 
 
-
 <p align="center">
   <em>RPCA-PCP via IALM</em>
 </p>
 <p align="center">
-  <img width="265" height="165" src="../main/data_driven_method/images/FN__ialm_0.01_1000_150_Misc_320_target.jpg">
+  <img width="265" height="165" src="../main/model_driven_method/FN__ialm_0.01_1000_150_Misc_320_target.jpg">
 </p>
