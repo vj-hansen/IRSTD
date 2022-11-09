@@ -10,6 +10,15 @@ from numpy import linalg
 from md_utils import shrinking
 
 
+def _check_converged(s_kp1_l, s_kp1_s, l_kp1, s_kp1, tol, converged, max_iter, k):
+    stopping_criterion = linalg.norm([s_kp1_l, s_kp1_s]) / (
+        2 * max(1, linalg.norm([l_kp1, s_kp1]))
+    )
+    if (stopping_criterion <= tol) or (converged == 0 and k >= max_iter):
+        return 1
+    return 0
+
+
 def rpca_apg(data_mat, lmbda, max_iter, tol):
     """
     Required input:
@@ -23,7 +32,7 @@ def rpca_apg(data_mat, lmbda, max_iter, tol):
     Return:
         s_hat - estimate of S
     """
-    U_i, sigm_i, v_i = linalg.svd(data_mat, full_matrices=False)
+    _, sigm_i, __ = linalg.svd(data_mat, full_matrices=False)
 
     l_k = l_m1 = numpy.zeros(data_mat.shape)
     s_k = s_m1 = numpy.zeros(data_mat.shape)
@@ -58,10 +67,8 @@ def rpca_apg(data_mat, lmbda, max_iter, tol):
         s_m1 = s_k
         l_k = l_kp1
         s_k = s_kp1
-        stopping_criterion = linalg.norm([s_kp1_l, s_kp1_s]) / (
-            2 * max(1, linalg.norm([l_kp1, s_kp1]))
+        converged = _check_converged(
+            s_kp1_l, s_kp1_s, l_kp1, s_kp1, tol, converged, max_iter, k
         )
-        if (stopping_criterion <= tol) or (converged == 0 and k >= max_iter):
-            converged = 1
     s_hat = s_k
     return s_hat
