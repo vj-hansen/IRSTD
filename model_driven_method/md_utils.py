@@ -123,7 +123,7 @@ def read_xml(path, in_file):
     return xml_np
 
 
-def pts_near(gt_bbx, pred_bbx, rad):
+def pts_near(gt_bbx, pred_bbx, rad) -> bool:
     """
     Determine if two points are within a radius.
 
@@ -158,7 +158,7 @@ def pts_near(gt_bbx, pred_bbx, rad):
     return pt_cls
 
 
-def get_target_loc(img_file, thresh, delta):
+def get_target_loc(img_file, thresh: int, delta: int):
     """
     Find location of pixels which have a different
     value than the black background (0 = black, 255 = white).
