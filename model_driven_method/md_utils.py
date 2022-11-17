@@ -7,7 +7,7 @@ import xml.etree.ElementTree as ET
 
 import cv2
 import numpy
-import pandas as pd
+import pandas
 import PIL
 
 
@@ -118,7 +118,7 @@ def read_xml(path, in_file):
             )
         xml_list.append(value)
     column_name = ["filename", "xmin", "ymin", "xmax", "ymax"]
-    xml_df = pd.DataFrame(xml_list, columns=column_name)
+    xml_df = pandas.DataFrame(xml_list, columns=column_name)
     xml_np = xml_df.to_numpy()
     return xml_np
 

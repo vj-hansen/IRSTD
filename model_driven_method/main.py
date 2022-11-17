@@ -13,12 +13,11 @@ import os
 import time
 
 import cv2
-import numpy as np
+import numpy
 from matplotlib import pyplot
-from PIL import Image
-
 from md_utils import get_target_loc, pts_near, read_xml
 from pcp import pcp_func
+from PIL import Image
 
 
 class MainClass:
@@ -42,15 +41,16 @@ class MainClass:
         self.img_dir = os.listdir(self.test_dir)
         self.save_dir = "model_driven_method/detection_pics/"
 
-    def set_dirs(self):
+    def set_dirs(self) -> None:
         if not os.path.exists(self.save_dir):
             os.makedirs(self.save_dir)
 
-    def get_files(self):
+    def get_files(self) -> list[str]:
         filelist = [file for file in self.img_dir if file.endswith(".png")]
         return filelist
 
     def run_pcp(self, img, im_shape):
+        # returns NDArray[float64]
         T = pcp_func(
             img,
             im_shape,
@@ -74,7 +74,7 @@ class MainClass:
                 gt_objects_in_img = 0
         return gt_objects_in_img, read_xml_file
 
-    def get_time(self, start, end):
+    def get_time(self, start, end) -> None:
         round_time = end - start
         self.total_time = self.total_time + round_time
         print("Total time: %.2f s" % round_time)
@@ -92,8 +92,8 @@ class MainClass:
         return gtcx_arr, gtcy_arr
 
     def assert_img(self, pcx_pos, gtcx_arr, gt_objects_in_img):
-        p_order = np.argsort(pcx_pos)
-        gt_order = np.argsort(gtcx_arr)
+        p_order = numpy.argsort(pcx_pos)
+        gt_order = numpy.argsort(gtcx_arr)
         if gt_objects_in_img == len(pcx_pos):
             self.true_pos += 1
             im_status = "TP_"
@@ -198,11 +198,15 @@ class MainClass:
                 f"{self.save_dir}{im_status}_{self.method_param}_{self.tol_param}_{self.max_it_param}_{self.thresh_param}_{file.split('.')[0]}_target.jpg",
                 circ_img_rgb,
             )
-            print_results(filelist)
+            self.print_results(filelist=filelist)
 
-        def print_results(self, filelist) -> None:
-            avg_time = self.total_time / (len(filelist))
-            print("Avg. time per img.: %.2f s" % avg_time)
-            print("TP: ", self.true_pos)
-            print("FP: ", self.false_pos)
-            print("FN: ", self.false_neg)
+    def print_results(self, filelist: list[str]) -> None:
+        avg_time = self.total_time / (len(filelist))
+        print("Avg. time per img.: %.2f s" % avg_time)
+        print("TP: ", self.true_pos)
+        print("FP: ", self.false_pos)
+        print("FN: ", self.false_neg)
+
+
+if __name__ == "__main__":
+    MainClass().run()

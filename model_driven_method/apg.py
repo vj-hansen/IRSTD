@@ -5,9 +5,8 @@ Accelerated Proximal Gradient (APG)
 from math import sqrt
 
 import numpy
-from numpy import linalg
-
 from md_utils import shrinking
+from numpy import linalg
 
 
 def check_converged(s_kp1_l, s_kp1_s, l_kp1, s_kp1, tol, converged, max_iter, k):
@@ -16,8 +15,7 @@ def check_converged(s_kp1_l, s_kp1_s, l_kp1, s_kp1, tol, converged, max_iter, k)
     )
     if (stopping_criterion <= tol) or (converged == 0 and k >= max_iter):
         return 1
-    else:
-        return 0
+    return 0
 
 
 def rpca_apg(data_mat, lmbda, max_iter, tol):

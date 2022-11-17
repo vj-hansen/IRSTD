@@ -32,16 +32,22 @@ def rpca_ialm(data_mat, lmbda, max_iter, tol):
     Return:
         s_hat - estimate of S
     """
-
     d_norm = linalg.norm(data_mat)
-    l_k = numpy.zeros(data_mat.shape)
-    s_k = numpy.zeros(data_mat.shape)
     y_k = data_mat / jay_func(data_mat, lmbda)
     mu_k = 1.25 / linalg.norm(data_mat, 2)
     mu_bar = mu_k * 1e7
     rho = 1.6
+    return solve_rpca_pcp_via_ialm(
+        data_mat, mu_k, y_k, lmbda, rho, mu_bar, d_norm, max_iter, tol
+    )
 
+
+def solve_rpca_pcp_via_ialm(
+    data_mat, mu_k, y_k, lmbda, rho, mu_bar, d_norm, max_iter, tol
+):
     # Solving RPCA-PCP via IALM
+    s_k = numpy.zeros(data_mat.shape)
+    l_k = numpy.zeros(data_mat.shape)
     converged = k = 0
     while converged == 0:
         U, sigm, v = linalg.svd(
