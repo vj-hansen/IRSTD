@@ -8,7 +8,7 @@ from numpy import linalg
 from md_utils import shrinking
 
 
-def jay_func(y_mat, lambd):
+def _jay_func(y_mat, lambd):
     """
     implements
         J(D) = max(norm_{2}(D), lambda^(-1)*norm_{inf}(D))
@@ -36,7 +36,7 @@ def rpca_ialm(data_mat, lmbda, max_iter, tol):
     d_norm = linalg.norm(data_mat)
     l_k = numpy.zeros(data_mat.shape)
     s_k = numpy.zeros(data_mat.shape)
-    y_k = data_mat / jay_func(data_mat, lmbda)
+    y_k = data_mat / _jay_func(data_mat, lmbda)
     mu_k = 1.25 / linalg.norm(data_mat, 2)
     mu_bar = mu_k * 1e7
     rho = 1.6
