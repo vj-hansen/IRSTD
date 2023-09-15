@@ -3,7 +3,7 @@ Utilities used for model-driven method.
 """
 
 import math
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree
 
 import cv2
 import numpy
@@ -17,28 +17,30 @@ def shrinking(mat_in, epsilon):
     return numpy.multiply(sgn, numpy.maximum(numpy.abs(mat_in) - epsilon, 0))
 
 
-def mat2gray(m):
+def mat2gray(mat):
     """
     Matrix to grayscale image
     """
-    m = numpy.asmatrix(m)
-    m_min = numpy.min(m)
-    m_max = numpy.max(m)
-    img = numpy.zeros(numpy.shape(m))
-    divisor_mat = float(m_max - m_min) * (m - m_min)
+    mat = numpy.asmatrix(mat)
+    m_min = numpy.min(mat)
+    m_max = numpy.max(mat)
+    img = numpy.zeros(numpy.shape(mat))
+    divisor_mat = float(m_max - m_min) * (mat - m_min)
     if numpy.max(divisor_mat) > 0:
         img = numpy.add(
             img,
             numpy.multiply(
-                numpy.logical_and(numpy.greater_equal(m, m_min), numpy.less(m, m_max)),
-                (1 / float(m_max - m_min) * (m - m_min)),
+                numpy.logical_and(
+                    numpy.greater_equal(mat, m_min), numpy.less(mat, m_max)
+                ),
+                (1 / float(m_max - m_min) * (mat - m_min)),
             ),
         )
-    img = numpy.add(img, (numpy.greater_equal(m, m_max)))
+    img = numpy.add(img, (numpy.greater_equal(mat, m_max)))
     return img
 
 
-def sliding_window(img_1, wndw_sz, step_sz, m, n):
+def sliding_window(img_input, wndw_sz, step_sz, m, n):
     """
     Sliding window
     --------------
@@ -51,7 +53,7 @@ def sliding_window(img_1, wndw_sz, step_sz, m, n):
     Return:
         image patch [2500 x ]
     """
-    img = numpy.array(img_1)
+    img = numpy.array(img_input)
     org_img = []
     for i in range(0, m - wndw_sz + 1, step_sz):
         for j in range(0, n - wndw_sz + 1, step_sz):
@@ -96,7 +98,7 @@ def read_xml(path, in_file):
     """
     xml_list = []
     full_path = path + in_file + ".xml"
-    tree = ET.parse(full_path)
+    tree = xml.etree.ElementTree.parse(full_path)
     root = tree.getroot()
     for member in root.findall("object"):
         # the number of 'object' in the file dictates how many targets we have
@@ -184,7 +186,7 @@ def get_target_loc(img_file, thresh: int, delta: int):
         y_p_a.append(y_pos)
 
     for i, (x, y) in enumerate(zip(x_p_a, y_p_a)):
-        if i == 0 or i == len(x_v) - 1:
+        if i in (0, len(x_v) - 1):
             r_x_p_a.append(x_p_a[i])
             r_y_p_a.append(y_p_a[i])
             if i == 0:

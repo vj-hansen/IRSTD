@@ -16,9 +16,9 @@ from md_utils import mat2gray, sliding_window
 def pcp_func(
     o_image,
     im_shape,
+    method,
     max_iter=500,
     tol=1e-2,
-    method="ialm",
     sw_step_size=10,
     sw_ptch_sz=50,
 ):
@@ -28,9 +28,11 @@ def pcp_func(
     m, n = im_shape
     wndw_sz = sw_ptch_sz
     step_sz = sw_step_size
-    orig_img = sliding_window(o_image, wndw_sz, step_sz, m, n)
+    orig_img = sliding_window(
+        img_input=o_image, wndw_sz=wndw_sz, step_sz=step_sz, m=m, n=n
+    )
 
-    orig_img = mat2gray(orig_img)
+    orig_img = mat2gray(mat=orig_img)
 
     lam = 1.0 / np.sqrt(np.max((m, n)))
     if method == "apg":
