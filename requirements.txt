@@ -1,6 +1,3 @@
-# Dependencies for Python. Install with:
-# `pip install -r requirements.txt`
-
 numpy
 opencv-python
 matplotlib
@@ -8,3 +5,4 @@ pandas
 tf-slim
 Cython
 lvis
+loguru
