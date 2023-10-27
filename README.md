@@ -15,6 +15,10 @@
 
 
 ```sh
+git clone git@github.com:vj-hansen/IRSTD.git
+
+cd IRSTD
+
 sudo apt install \
   python3-pip \
   python3-tk \
@@ -22,11 +26,7 @@ sudo apt install \
   python3-lxml \
   python3-pil
 
-
 pip install -r requirements.txt
-```
 
-
-```sh
 python main.py --method "apg" --image-dir "test_imgs"
 ```
