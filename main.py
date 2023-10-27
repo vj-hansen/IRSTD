@@ -20,8 +20,8 @@ from loguru import logger
 from matplotlib import pyplot
 from PIL import Image
 
-from md_utils import get_target_loc, pts_near, read_xml
-from pcp import pcp_func
+from tools import get_target_loc, pts_near, read_xml
+from principal_component_pursuit import pcp_func
 
 
 class MainClass:
@@ -44,16 +44,18 @@ class MainClass:
         self.img_dir = os.listdir(self.test_dir)
         self.save_dir = "detection_pics/"
 
-    def set_dirs(self):
+        self._set_dirs()
+
+    def _set_dirs(self):
         if not Path(self.save_dir).exists():
             Path(self.save_dir).mkdir(parents=True)
 
-    def get_files(self):
+    def _get_files(self):
         filelist = [file for file in self.img_dir if file.endswith(".png")]
         logger.debug(filelist)
         return filelist
 
-    def run_pcp(self, img, im_shape):
+    def _run_pcp(self, img, im_shape):
         T = pcp_func(
             img,
             im_shape,
@@ -65,7 +67,7 @@ class MainClass:
         )
         return T
 
-    def check_files(self, file):
+    def _check_files(self, file):
         if file.split(".")[-1] == "png":
             fullpath = self.test_dir + file
             tmp_img = Image.open(fullpath).convert("L")
@@ -77,12 +79,12 @@ class MainClass:
                 gt_objects_in_img = 0
         return gt_objects_in_img, read_xml_file
 
-    def get_time(self, start, end):
+    def _get_time(self, start, end):
         round_time = end - start
         self.total_time = self.total_time + round_time
         logger.debug("Total time: %.2f s" % round_time)
 
-    def iter_image(self, iter_, read_xml_file, circ_img_rgb, gtcx_arr, gtcy_arr):
+    def _iter_image(self, iter_, read_xml_file, circ_img_rgb, gtcx_arr, gtcy_arr):
         ymin_xml = read_xml_file[iter_][2]
         xmin_xml = read_xml_file[iter_][1]
         ymax_xml = read_xml_file[iter_][4]
@@ -94,7 +96,7 @@ class MainClass:
         gtcy_arr.append(cy_xml)
         return gtcx_arr, gtcy_arr
 
-    def assert_img(self, pcx_pos, gtcx_arr, gt_objects_in_img):
+    def _assert_img(self, pcx_pos, gtcx_arr, gt_objects_in_img):
         p_order = np.argsort(pcx_pos)
         gt_order = np.argsort(gtcx_arr)
         if gt_objects_in_img == len(pcx_pos):
@@ -110,7 +112,9 @@ class MainClass:
             im_status = "FP_"
         return im_status, p_order, gt_order
 
-    def pts_prox(self, gt_bbx, pred_bbx, pcx_pos, gt_objects_in_img, status_img) -> str:
+    def _pts_prox(
+        self, gt_bbx, pred_bbx, pcx_pos, gt_objects_in_img, status_img
+    ) -> str:
         pts_close = pts_near(
             gt_bbx, pred_bbx, rad=5
         )  # return true if objects are within proximity
@@ -130,7 +134,7 @@ class MainClass:
             im_status = "FP_"
         return im_status
 
-    def get_boxes(
+    def _get_boxes(
         self, it1, it2, pcx_pos, pcy_pos, p_order, gt_order, gtcx_arr, gtcy_arr
     ):
         pred_bbx = {
@@ -145,17 +149,17 @@ class MainClass:
         return gt_bbx, pred_bbx
 
     def run(self) -> None:
-        filelist = self.get_files()
+        filelist = self._get_files()
         im_status = ""
         for _, file in enumerate(filelist):
-            gt_objects_in_img, read_xml_file = self.check_files(file)
+            gt_objects_in_img, read_xml_file = self._check_files(file)
             img = pyplot.imread("img.jpg")
             m, n = img.shape
             im_shape = (m, n)
             start = time.time()
-            T = self.run_pcp(img, im_shape)
+            T = self._run_pcp(img, im_shape)
             end = time.time()
-            self.get_time(start, end)
+            self._get_time(start, end)
             self.total_gt_obj = gt_objects_in_img + self.total_gt_obj
 
             self.img_filename.append(file.split(".")[0])
@@ -172,15 +176,15 @@ class MainClass:
             status_img = []
             if gt_objects_in_img != 0:
                 for iter_ in range(gt_objects_in_img):
-                    gtcx_arr, gtcy_arr = self.iter_image(
+                    gtcx_arr, gtcy_arr = self._iter_image(
                         iter_, read_xml_file, circ_img_rgb, gtcx_arr, gtcy_arr
                     )
             if len(pcx_pos) != 0:
-                im_status, p_order, gt_order = self.assert_img(
+                im_status, p_order, gt_order = self._assert_img(
                     pcx_pos, gtcx_arr, gt_objects_in_img
                 )
                 for it1, it2 in zip(range(len(pcx_pos)), range(gt_objects_in_img)):
-                    gt_bbx, pred_bbx = self.get_boxes(
+                    gt_bbx, pred_bbx = self._get_boxes(
                         it1,
                         it2,
                         pcx_pos,
@@ -190,7 +194,7 @@ class MainClass:
                         gtcx_arr,
                         gtcy_arr,
                     )
-                    im_status = self.pts_prox(
+                    im_status = self._pts_prox(
                         gt_bbx, pred_bbx, pcx_pos, gt_objects_in_img, status_img
                     )
             elif gt_objects_in_img == 0 and len(pcx_pos) == 0:
@@ -209,9 +213,9 @@ class MainClass:
                 image_write,
                 circ_img_rgb,
             )
-            self.print_results(filelist)
+            self._print_results(filelist)
 
-    def print_results(self, filelist) -> None:
+    def _print_results(self, filelist) -> None:
         avg_time = self.total_time / (len(filelist))
         logger.info("Avg. time per img.: %.2f s" % avg_time)
         logger.info(f"TP: {self.true_pos}")

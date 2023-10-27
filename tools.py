@@ -7,8 +7,7 @@ import xml.etree.ElementTree
 
 import cv2
 import numpy
-import pandas as pd
-import PIL
+import pandas
 
 
 def shrinking(mat_in, epsilon):
@@ -17,7 +16,7 @@ def shrinking(mat_in, epsilon):
     return numpy.multiply(sgn, numpy.maximum(numpy.abs(mat_in) - epsilon, 0))
 
 
-def mat2gray(mat):
+def matrix_to_grayscale(mat):
     """
     Matrix to grayscale image
     """
@@ -65,26 +64,6 @@ def sliding_window(img_input, wndw_sz, step_sz, m, n):
     return org_img
 
 
-def image_to_mat(o_img):
-    """Image to matrix"""
-    mat = []
-    shape = None
-    img = PIL.Image.open(o_img).convert("L")
-    if shape is None:
-        shape = img.size
-        pix = list(img.getdata())
-        # getdata(): returns the contents of this image as a sequence object
-        # containing pixel values. The sequence object is flattened,
-        # so that values for line 1 follow directly after the values of line 0
-        mat.append(pix)
-    return numpy.array(mat), shape[::-1]
-
-
-def rgb2gray(rgb):
-    """RGB image to grayscale image"""
-    return numpy.dot(rgb[..., :3], [0.2989, 0.5870, 0.1140])
-
-
 def read_xml(path, in_file):
     """Iterates through all .xml files in a given directory and combines
     them in a single Pandas dataframe.
@@ -120,7 +99,7 @@ def read_xml(path, in_file):
             )
         xml_list.append(value)
     column_name = ["filename", "xmin", "ymin", "xmax", "ymax"]
-    xml_df = pd.DataFrame(xml_list, columns=column_name)
+    xml_df = pandas.DataFrame(xml_list, columns=column_name)
     xml_np = xml_df.to_numpy()
     return xml_np
 
@@ -179,7 +158,7 @@ def get_target_loc(img_file, thresh: int, delta: int):
     circ_img_rgb = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
     y_v, x_v = numpy.where(img > thresh)
 
-    if len(x_v) == 0 or len(y_v) == 0:
+    if 0 in (len(x_v), len(y_v)):
         circ_img = circ_img_rgb
     for y_pos, x_pos in zip(y_v, x_v):
         x_p_a.append(x_pos)

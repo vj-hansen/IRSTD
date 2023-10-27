@@ -7,7 +7,7 @@ from math import sqrt
 import numpy
 from numpy import linalg
 
-from md_utils import shrinking
+from tools import shrinking
 
 
 def _check_converged(s_kp1_l, s_kp1_s, l_kp1, s_kp1, tol, converged, max_iter, k):
