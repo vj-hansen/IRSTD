@@ -8,9 +8,9 @@ Based on:
 
 import numpy as np
 
-from apg import rpca_apg
-from ialm import rpca_ialm
-from md_utils import mat2gray, sliding_window
+from accelerated_proximal_gradient import rpca_apg
+from inexact_augmented_lagrange_multiplier import rpca_ialm
+from tools import matrix_to_grayscale, sliding_window
 
 
 def pcp_func(
@@ -32,7 +32,7 @@ def pcp_func(
         img_input=o_image, wndw_sz=wndw_sz, step_sz=step_sz, m=m, n=n
     )
 
-    orig_img = mat2gray(mat=orig_img)
+    orig_img = matrix_to_grayscale(mat=orig_img)
 
     lam = 1.0 / np.sqrt(np.max((m, n)))
     if method == "apg":

@@ -5,7 +5,7 @@ Inexact augmented Lagrange multiplier (IALM)
 import numpy
 from numpy import linalg
 
-from md_utils import shrinking
+from tools import shrinking
 
 
 def _jay_func(y_mat, lambd):
@@ -39,7 +39,7 @@ def rpca_ialm(data_mat, lmbda, max_iter, tol):
     y_k = data_mat / _jay_func(data_mat, lmbda)
     mu_k = 1.25 / linalg.norm(data_mat, 2)
     mu_bar = mu_k * 1e7
-    rho = 1.6
+    RHO = 1.6
 
     # Solving RPCA-PCP via IALM
     converged = k = 0
@@ -52,7 +52,7 @@ def rpca_ialm(data_mat, lmbda, max_iter, tol):
         l_kp1 = numpy.dot(l_kp1, v)
         shr = data_mat - l_kp1 + numpy.dot(numpy.reciprocal(mu_k), y_k)
         s_kp1 = shrinking(shr, lmbda * numpy.reciprocal(mu_k))
-        mu_k = min(mu_k * rho, mu_bar)
+        mu_k = min(mu_k * RHO, mu_bar)
         k = k + 1
         l_k = l_kp1
         s_k = s_kp1
