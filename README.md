@@ -22,7 +22,6 @@ cd IRSTD
 sudo apt install \
   python3-pip \
   python3-tk \
-  protobuf-compiler \
   python3-lxml \
   python3-pil
 

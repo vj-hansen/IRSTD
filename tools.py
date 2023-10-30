@@ -4,81 +4,100 @@ Utilities used for model-driven method.
 
 import math
 import xml.etree.ElementTree
+from pathlib import Path
 
 import cv2
 import numpy
 import pandas
 
 
-def shrinking(mat_in, epsilon):
-    """Soft-thresholding (shrinkage) operator: S_epsilon[x]"""
+def shrinking(mat_in, epsilon) -> numpy.ndarray:
+    """
+    Soft-thresholding (shrinkage) operator: S_epsilon[x]
+
+    Args:
+        TBA
+
+    Returns:
+        TBA
+    """
     sgn = numpy.sign(mat_in)  # sign returns -1 if x < 0, 0 if x==0, 1 if x > 0
     return numpy.multiply(sgn, numpy.maximum(numpy.abs(mat_in) - epsilon, 0))
 
 
-def matrix_to_grayscale(mat):
+def matrix_to_grayscale(mat) -> numpy.ndarray:
     """
     Matrix to grayscale image
+
+    Args:
+        TBA
+
+    Returns:
+        img: numpy.ndarray
     """
     mat = numpy.asmatrix(mat)
-    m_min = numpy.min(mat)
-    m_max = numpy.max(mat)
+    mat_min = numpy.min(mat)
+    mat_max = numpy.max(mat)
     img = numpy.zeros(numpy.shape(mat))
-    divisor_mat = float(m_max - m_min) * (mat - m_min)
+    divisor_mat = float(mat_max - mat_min) * (mat - mat_min)
+
     if numpy.max(divisor_mat) > 0:
         img = numpy.add(
             img,
             numpy.multiply(
                 numpy.logical_and(
-                    numpy.greater_equal(mat, m_min), numpy.less(mat, m_max)
+                    numpy.greater_equal(mat, mat_min), numpy.less(mat, mat_max)
                 ),
-                (1 / float(m_max - m_min) * (mat - m_min)),
+                (1 / float(mat_max - mat_min) * (mat - mat_min)),
             ),
         )
-    img = numpy.add(img, (numpy.greater_equal(mat, m_max)))
-    return img
+
+    return numpy.add(img, (numpy.greater_equal(mat, mat_max)))
 
 
-def sliding_window(img_input, wndw_sz, step_sz, m, n):
+def sliding_window(img_input, window_size, step_size, m, n) -> numpy.ndarray:
     """
     Sliding window
-    --------------
-    Input:
-        img_1: input image
+
+    Args:
+        img_input: input image
         wndw_sz: size of sliding window
         step_sz: step size
         m, n: image shape
-    --------------
-    Return:
+
+    Returns:
         image patch [2500 x ]
     """
     img = numpy.array(img_input)
-    org_img = []
-    for i in range(0, m - wndw_sz + 1, step_sz):
-        for j in range(0, n - wndw_sz + 1, step_sz):
-            temp = img[i : i + wndw_sz, j : j + wndw_sz]
-            org_img = numpy.append(org_img, [temp.flatten("F")])
-    org_img = numpy.reshape(
-        org_img, (wndw_sz * wndw_sz, org_img.size // (wndw_sz * wndw_sz)), order="F"
+    original_image = []
+    for i in range(0, m - window_size + 1, step_size):
+        for j in range(0, n - window_size + 1, step_size):
+            temp = img[i : i + window_size, j : j + window_size]
+            original_image = numpy.append(original_image, [temp.flatten("F")])
+
+    return numpy.reshape(
+        original_image,
+        (window_size * window_size, original_image.size // (window_size * window_size)),
+        order="F",
     )
-    return org_img
 
 
-def read_xml(path, in_file):
+def read_xml(xml_path, in_file) -> numpy.ndarray:
     """Iterates through all .xml files in a given directory and combines
     them in a single Pandas dataframe.
 
-    Parameters:
-    ----------
-    path : str
-        The path containing the .xml files
+    Args:
+        xml_path : str
+            The path containing the .xml files
+
     Returns:
-        Numpy array
+        xml_np: Numpy array
     """
     xml_list = []
-    full_path = path + in_file + ".xml"
-    tree = xml.etree.ElementTree.parse(full_path)
-    root = tree.getroot()
+    file_path = f"{in_file}.xml"
+    full_path = Path(xml_path, file_path)
+    root = xml.etree.ElementTree.parse(full_path).getroot()
+
     for member in root.findall("object"):
         # the number of 'object' in the file dictates how many targets we have
         if len(member) == 7:  # some xml files contain extra info on "pixels"
@@ -98,25 +117,23 @@ def read_xml(path, in_file):
                 int(member[4][3].text),
             )
         xml_list.append(value)
+
     column_name = ["filename", "xmin", "ymin", "xmax", "ymax"]
-    xml_df = pandas.DataFrame(xml_list, columns=column_name)
-    xml_np = xml_df.to_numpy()
-    return xml_np
+    return pandas.DataFrame(xml_list, columns=column_name).to_numpy()
 
 
-def pts_near(gt_bbx, pred_bbx, rad) -> bool:
+def points_near(gt_bbx, pred_bbx, rad) -> bool:
     """
     Determine if two points are within a radius.
 
-    Parameters
-    ----------
-    gt_bbx : dict
-            [centre_x, centre_y]
-    pred_bbx : dict
-            [centre_x, centre_y]
-    Returns
-    -------
-    True or False
+    Args:
+        gt_bbx : dict
+                [centre_x, centre_y]
+        pred_bbx : dict
+                [centre_x, centre_y]
+
+    Returns:
+        True if two points are within a radius, else False
     """
 
     # create a box region where anything outside
@@ -139,7 +156,7 @@ def pts_near(gt_bbx, pred_bbx, rad) -> bool:
     return pt_cls
 
 
-def get_target_loc(img_file, thresh: int, delta: int):
+def get_target_location(img_file: str, thresh: int, delta: int):
     """
     Find location of pixels which have a different
     value than the black background (0 = black, 255 = white).
@@ -154,6 +171,7 @@ def get_target_loc(img_file, thresh: int, delta: int):
     r_y_p_a = []
     radius = 5
 
+    # TODO get rid off cv
     img = cv2.imread(img_file, 0)
     circ_img_rgb = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
     y_v, x_v = numpy.where(img > thresh)
@@ -186,6 +204,7 @@ def get_target_loc(img_file, thresh: int, delta: int):
                 circ_img = cv2.circle(circ_img_rgb, (x, y), radius, (0, 255, 0), 2)
             else:
                 circ_img = circ_img_rgb
+
     if len(x_v) != 0 and len(y_v) != 0:
         if (
             abs(x_p_a[0] - x_p_a[len(x_v) - 1]) < delta
@@ -193,4 +212,5 @@ def get_target_loc(img_file, thresh: int, delta: int):
         ):
             r_x_p_a.pop()
             r_y_p_a.pop()
+
     return circ_img, r_x_p_a, r_y_p_a
